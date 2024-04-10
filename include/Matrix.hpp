@@ -21,10 +21,18 @@ namespace pacs {
     
     namespace algebra {
         
-        // Default orderings.
+        /**
+         * @brief Default orderings.
+         * 
+         */
         enum Order {Row, Column};
 
-        // Matrix class.
+        /**
+         * @brief Matrix class.
+         * 
+         * @tparam T 
+         * @tparam O 
+         */
         template<typename T, Order O = Row>
         class Matrix {
             private:
