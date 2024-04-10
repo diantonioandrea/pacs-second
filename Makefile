@@ -2,8 +2,8 @@
 CXXFLAGS = -Wall -pedantic -std=c++20  -I./include
 
 # Extras.
-CPPFLAGS = -I$(PACS_ROOT)/include
-LDFLAGS = -L$(PACS_ROOT)/lib
+CPPFLAGS = # -I$(PACS_ROOT)/include
+LDFLAGS = # -L$(PACS_ROOT)/lib
 
 # Optimization.
 # CXXFLAGS += -O2 -DNDEBUG
