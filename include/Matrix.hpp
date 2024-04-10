@@ -60,7 +60,15 @@ namespace pacs {
 
                 // CONSTRUCTORS.
 
-                Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::map<std::array<std::size_t, 2>, T> elements): first{first}, second{second} {
+                /**
+                 * @brief Construct a new Matrix< T,  O> from a given std::map.
+                 * 
+                 * @param first 
+                 * @param second 
+                 * @param elements 
+                 */
+                Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::map<std::array<std::size_t, 2>, T> elements): 
+                first{first}, second{second} {
                     this->elements = elements;
                 }
 
@@ -82,7 +90,10 @@ namespace pacs {
                     if(!(this->compressed))
                         return this->elements.contains({j, k}) ? this->elements[{j, k}] : static_cast<T>(0);
 
-                    // WIP.
+                    for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
+                        if(k == this->outer[i])
+                            return this->values[i];
+                    }
 
                     return static_cast<T>(0);
                 }
@@ -94,14 +105,14 @@ namespace pacs {
                  * @param k 
                  * @return T& 
                  */
-                T &operator () (const std::size_t &j, const std::size_t &k) {
-                    #ifndef NDEBUG // Out-of-bound check.
-                    assert((j < first) && (k < second));
-                    assert(!(this->compressed));
-                    #endif
+                // T &operator ()(const std::size_t &j, const std::size_t &k) {
+                //     #ifndef NDEBUG // Out-of-bound check.
+                //     assert((j < first) && (k < second));
+                //     assert(!(this->compressed));
+                //     #endif
 
-                    return this->elements[{j, k}];
-                }
+                //     return this->elements[{j, k}];
+                // }
 
                 // SHAPE.
 
@@ -147,30 +158,22 @@ namespace pacs {
                     this->inner[0] = index;
 
                     // Compression.
-                    if constexpr (O == Row) {
-                        for(std::size_t j = 1; j < this->first + 1; ++j) {
-                            for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.upper_bound(next))).first; ++it) {
-                                if((*it).second != static_cast<T>(0)) {
-                                    this->outer.emplace_back((*it).first[1]);
-                                    this->values.emplace_back((*it).second);
-                                    ++index;
-                                }
+                    for(std::size_t j = 1; j < this->first + 1; ++j) {
+                        for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.upper_bound(next))).first; ++it) {
+                            if((*it).second != static_cast<T>(0)) {
+                                this->outer.emplace_back((*it).first[1]);
+                                this->values.emplace_back((*it).second);
+                                ++index;
                             }
-
-                            this->inner[j] = index;
-                            ++current[0];
-                            ++next[0];
                         }
+
+                        this->inner[j] = index;
+                        ++current[0];
+                        ++next[0];
                     }
-
-                    if constexpr (O == Column) {
-                        // WIP.
-                    }
-
-                    this->elements.clear();
-
-                    // Flag update.
+                    
                     this->compressed = true;
+                    this->elements.clear();                
                 }
 
                 /**
@@ -188,12 +191,10 @@ namespace pacs {
                         }
                     }
 
+                    this->compressed = false;
                     this->inner.clear();
                     this->outer.clear();
-                    this->values.clear();
-
-                    // Flag update.
-                    this->compressed = false;
+                    this->values.clear();            
                 }
 
                 /**
@@ -208,10 +209,21 @@ namespace pacs {
 
                 // OUTPUT.
 
+                /**
+                 * @brief Matrix output.
+                 * 
+                 * @param ost 
+                 * @param matrix 
+                 * @return std::ostream& 
+                 */
                 friend std::ostream &operator <<(std::ostream &ost, const Matrix<T, O> &matrix) {
                     if(!(matrix.compressed)) {
-                        for(const auto &[position, value]: matrix.elements)
-                            ost << "(" << position[0] << ", " << position[1] << "): " << value << std::endl;
+                        for(const auto &[position, value]: matrix.elements) {
+                            ost << "(" << position[0] << ", " << position[1] << "): " << value;
+
+                            if(position != (*--matrix.elements.end()).first)
+                                ost << std::endl;
+                        }
 
                     } else {
                         ost << "Inner: ";
