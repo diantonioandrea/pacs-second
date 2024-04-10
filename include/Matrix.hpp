@@ -59,7 +59,7 @@ namespace pacs {
                  * @return T 
                  */
                 T operator ()(const std::size_t &j, const std::size_t &k) const {
-                    #ifndef NDBEGUG // Out-of-bound check.
+                    #ifndef NDEBUG // Out-of-bound check.
 
                     if constexpr (O == Row)
                         assert((j < first) && (k < second));
