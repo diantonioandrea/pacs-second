@@ -1,0 +1,6 @@
+# VSCode
+.vscode
+
+# C++
+**/*.o
+main
