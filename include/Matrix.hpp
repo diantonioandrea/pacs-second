@@ -11,8 +11,9 @@
 #ifndef MATRIX_PACS
 #define MATRIX_PACS
 
-// Maps and Vectors.
+// Containers.
 #include <vector>
+#include <array>
 #include <map>
 
 // Output.
@@ -32,10 +33,10 @@ namespace pacs {
         enum Order {Row, Column};
 
         /**
-         * @brief Matrix class.
+         * @brief Sparse matrix class.
          * 
-         * @tparam T 
-         * @tparam O 
+         * @tparam T Matrix' type.
+         * @tparam O Matrix' ordering.
          */
         template<typename T, Order O = Row>
         class Matrix {
@@ -61,15 +62,75 @@ namespace pacs {
                 // CONSTRUCTORS.
 
                 /**
-                 * @brief Construct a new Matrix< T,  O> from a given std::map.
+                 * @brief Construct a new empty Matrix<T, O>.
+                 * 
+                 * @param first 
+                 * @param second 
+                 */
+                Matrix<T, O>(const std::size_t &first, const std::size_t &second): first{first}, second{second} {}
+
+                /**
+                 * @brief Construct a new Matrix<T, O> from a given std::map.
                  * 
                  * @param first 
                  * @param second 
                  * @param elements 
                  */
                 Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::map<std::array<std::size_t, 2>, T> elements): 
-                first{first}, second{second} {
-                    this->elements = elements;
+                first{first}, second{second}, elements{elements} {
+                    #ifndef NDEBUG // Integrity checks.
+
+                    // WIP.
+
+                    #endif
+                }
+
+                /**
+                 * @brief Construct a new Matrix<T, O> from given inner, outer and values vectors.
+                 * 
+                 * @param first 
+                 * @param second 
+                 * @param elements 
+                 */
+                Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::vector<std::size_t> &inner, const std::vector<std::size_t> &outer, const std::vector<T> &values): 
+                first{first}, second{second}, inner{inner}, outer{outer}, values{values} {
+                    this->compressed = true;
+
+                    #ifndef NDEBUG // Integrity checks.
+
+                    // WIP.
+
+                    #endif
+                }
+
+                /**
+                 * @brief Copies an existing matrix.
+                 * 
+                 * @param matrix 
+                 * @return Matrix<T, O>& 
+                 */
+                Matrix<T, O> &operator =(const Matrix<T, O> &matrix) {
+                    #ifndef NDEBUG
+                    assert((this->first == matrix.first) && (this->second == matrix.second));
+                    #endif
+
+                    if(!(matrix.compressed)) {
+                        this->compressed = false;
+                        this->elements = matrix.elements;
+
+                        this->inner.clear();
+                        this->outer.clear();
+                        this->values.clear();
+                    } else {
+                        this->compressed = true;
+                        this->elements.clear();
+
+                        this->inner = matrix.inner;
+                        this->outer = matrix.outer;
+                        this->values = matrix.values;
+                    }
+
+                    return *this;
                 }
 
                 // CALL OPERATORS.
@@ -86,15 +147,17 @@ namespace pacs {
                     assert((j < first) && (k < second));
                     #endif
 
-                    // Returns the value if present, otherwise static_cast<T>(0).
+                    // Checks for the value inside elements, otherwise returns static_cast<T>(0).
                     if(!(this->compressed))
                         return this->elements.contains({j, k}) ? this->elements[{j, k}] : static_cast<T>(0);
 
+                    // Looks for the value.
                     for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
                         if(k == this->outer[i])
                             return this->values[i];
                     }
 
+                    // Default return.
                     return static_cast<T>(0);
                 }
 
@@ -139,6 +202,41 @@ namespace pacs {
 
                     return this->second;
                 }
+                
+                /**
+                 * @brief Returns the matrix' shape: Rows x Columns.
+                 * 
+                 * @return constexpr std::pair<std::size_t, std::size_t> 
+                 */
+                constexpr std::pair<std::size_t, std::size_t> shape() const {
+                    return {this->rows(), this->columns()};
+                }
+
+                /**
+                 * @brief Returns a reshaped matrix.
+                 * 
+                 * @param first 
+                 * @param second 
+                 * @return Matrix<T, O> 
+                 */
+                Matrix<T, O> reshape(const std::size_t &first, const std::size_t &second, const bool &compress = false) {
+                    if(!(this->compressed)) {
+                        Matrix<T, O> matrix{first, second, this->elements};
+
+                        if(compress)
+                            matrix.compress();
+
+                        return matrix;
+                    }
+                        
+                    Matrix<T, O> matrix{first, second, this->inner, this->outer, this->values};
+
+                    if(compress)
+                        return matrix;
+
+                    matrix.uncompress();
+                    return matrix;
+                }
 
                 // COMPRESSION.
 
@@ -159,10 +257,12 @@ namespace pacs {
 
                     // Compression.
                     for(std::size_t j = 1; j < this->first + 1; ++j) {
-                        for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.upper_bound(next))).first; ++it) {
-                            if((*it).second != static_cast<T>(0)) {
-                                this->outer.emplace_back((*it).first[1]);
-                                this->values.emplace_back((*it).second);
+                        for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.lower_bound(next))).first; ++it) {
+                            auto [key, value] = (*it);
+
+                            if(value != static_cast<T>(0)) { // WIP.
+                                this->outer.emplace_back(key[1]);
+                                this->values.emplace_back(value);
                                 ++index;
                             }
                         }
@@ -207,6 +307,167 @@ namespace pacs {
                     return this->compressed;
                 }
 
+                // ROWS AND COLUMNS.
+                
+                /**
+                 * @brief Returns the j-th row.
+                 * 
+                 * @param j 
+                 * @return std::vector<T> 
+                 */
+                std::vector<T> row(const std::size_t &j) const {
+                    #ifndef NDEBUG
+                    assert(j < this->rows());
+                    #endif
+
+                    std::vector<T> row;
+                    row.resize(this->columns(), static_cast<T>(0));
+
+                    if constexpr (O == Row) {
+                        if(!(this->compressed)) {
+                            auto end = j + 1 == this->rows() ? --this->elements.end() : this->elements.lower_bound({j + 1, 0}); // End iterator.
+                            for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*end).first; ++it)
+                                row[(*it).first[1]] = (*it).second;
+
+                            if(j + 1 == this->rows()) // Last element fix.
+                                row[this->columns() - 1] = (*this)(j, this->columns() - 1);
+
+                        } else {
+                            for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
+                                row[this->outer[i]] = this->values[i];
+                        }
+                    }
+
+                    if constexpr (O == Column) {
+                        if(!(this->compressed)) { // Full iteration on non-zero elements.
+                            for(const auto &[key, value]: this->elements) {
+                                if(key[1] == j)
+                                    row[key[0]] = value;
+                            } 
+                        } else {
+                            std::size_t index = 0;
+                            for(std::size_t i = 0; i < this->outer.size(); ++i) { // Full iteration on the outer vector.
+                                if(this->outer[i] == j) {
+                                    for(std::size_t k = index; k < this->inner.size(); k++) {
+                                        if(this->inner[index] > i)
+                                            break;
+                                    }
+
+                                    row[index - 1] = this->values[i];
+                                }
+                            }
+                        }
+                    }
+
+                    return row;
+                }
+
+                /**
+                 * @brief Returns the j-th column.
+                 * 
+                 * @param j 
+                 * @return std::vector<T> 
+                 */
+                std::vector<T> column(const std::size_t &j) const {
+                    #ifndef NDEBUG
+                    assert(j < this->columns());
+                    #endif
+
+                    std::vector<T> column;
+                    column.resize(this->rows(), static_cast<T>(0));
+
+                    if constexpr (O == Column) {
+                        if(!(this->compressed)) {
+                            auto end = j + 1 == this->rows() ? --this->elements.end() : this->elements.lower_bound({j + 1, 0}); // End iterator.
+                            for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*end).first; ++it)
+                                column[(*it).first[1]] = (*it).second;
+
+                            if(j + 1 == this->rows()) // Last element fix.
+                                column[this->columns() - 1] = (*this)(j, this->columns() - 1);
+
+                        } else {
+                            for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
+                                column[this->outer[i]] = this->values[i];
+                        }
+                    }
+
+                    if constexpr (O == Row) {
+                        if(!(this->compressed)) { // Full iteration on non-zero elements.
+                            for(const auto &[key, value]: this->elements) {
+                                if(key[1] == j)
+                                    column[key[0]] = value;
+                            } 
+                        } else {
+                            std::size_t index = 0;
+                            for(std::size_t i = 0; i < this->outer.size(); ++i) { // Full iteration on the outer vector.
+                                if(this->outer[i] == j) {
+                                    for(std::size_t k = index; k < this->inner.size(); k++) {
+                                        if(this->inner[index] > i)
+                                            break;
+                                    }
+
+                                    column[index - 1] = this->values[i];
+                                }
+                            }
+                        }
+                    }
+
+                    return column;
+                }
+
+                // OPERATIONS.
+
+                /**
+                 * @brief Returns the product of Matrix x (column) Vector.
+                 * 
+                 * @param vector 
+                 * @return std::vector<T> 
+                 */
+                std::vector<T> operator *(const std::vector<T> &vector) const {
+                    #ifndef NDEBUG // Vector size check.
+                    assert(vector.size() == this->rows());
+                    #endif
+
+                    std::vector<T> result;
+                    result.resize(vector.size());
+                        
+                    for(std::size_t j = 0; j < vector.size() ; ++j) {
+                        std::vector<T> row = this->row(j);
+
+                        for(std::size_t k = 0; k < this->columns(); ++k) {
+                            result[j] += row[k] * vector[k];
+                        }
+                    }
+
+                    return result;
+                }
+
+                /**
+                 * @brief Returns the product of (row) Vector x Matrix.
+                 * 
+                 * @param vector 
+                 * @param matrix 
+                 * @return std::vector<T> 
+                 */
+                friend std::vector<T> operator *(const std::vector<T> &vector, const Matrix<T, O> &matrix) {
+                    #ifndef NDEBUG // Vector size check.
+                    assert(vector.size() == matrix.columns());
+                    #endif
+
+                    std::vector<T> result;
+                    result.resize(vector.size());
+
+                    for(std::size_t j = 0; j < vector.size() ; ++j) {
+                        std::vector<T> column = matrix.column(j);
+
+                        for(std::size_t k = 0; k < matrix.rows(); ++k) {
+                            result[j] += vector[k] * column[k];
+                        }
+                    }
+
+                    return result;
+                }
+
                 // OUTPUT.
 
                 /**
@@ -218,10 +479,10 @@ namespace pacs {
                  */
                 friend std::ostream &operator <<(std::ostream &ost, const Matrix<T, O> &matrix) {
                     if(!(matrix.compressed)) {
-                        for(const auto &[position, value]: matrix.elements) {
-                            ost << "(" << position[0] << ", " << position[1] << "): " << value;
+                        for(const auto &[key, value]: matrix.elements) {
+                            ost << "(" << key[0] << ", " << key[1] << "): " << value;
 
-                            if(position != (*--matrix.elements.end()).first)
+                            if(key != (*--matrix.elements.end()).first)
                                 ost << std::endl;
                         }
 
