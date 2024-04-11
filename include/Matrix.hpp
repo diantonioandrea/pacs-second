@@ -1,11 +1,11 @@
 /**
  * @file Matrix.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief 
+ * @brief
  * @date 2024-04-10
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #ifndef MATRIX_PACS
@@ -23,18 +23,18 @@
 #include <cassert>
 
 namespace pacs {
-    
+
     namespace algebra {
-        
+
         /**
          * @brief Default orderings.
-         * 
+         *
          */
         enum Order {Row, Column};
 
         /**
          * @brief Sparse matrix class.
-         * 
+         *
          * @tparam T Matrix' type.
          * @tparam O Matrix' ordering.
          */
@@ -42,7 +42,7 @@ namespace pacs {
         class Matrix {
             private:
 
-                // Size (Row x Columns or Columns x Row).
+                // Size (Rows x Columns or Columns x Rows).
                 const std::size_t first; // First dimension.
                 const std::size_t second; // Second dimension.
 
@@ -63,20 +63,20 @@ namespace pacs {
 
                 /**
                  * @brief Construct a new empty Matrix<T, O>.
-                 * 
-                 * @param first 
-                 * @param second 
+                 *
+                 * @param first
+                 * @param second
                  */
                 Matrix<T, O>(const std::size_t &first, const std::size_t &second): first{first}, second{second} {}
 
                 /**
                  * @brief Construct a new Matrix<T, O> from a given std::map.
-                 * 
-                 * @param first 
-                 * @param second 
-                 * @param elements 
+                 *
+                 * @param first
+                 * @param second
+                 * @param elements
                  */
-                Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::map<std::array<std::size_t, 2>, T> elements): 
+                Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::map<std::array<std::size_t, 2>, T> elements):
                 first{first}, second{second}, elements{elements} {
                     #ifndef NDEBUG // Integrity checks.
 
@@ -87,15 +87,13 @@ namespace pacs {
 
                 /**
                  * @brief Construct a new Matrix<T, O> from given inner, outer and values vectors.
-                 * 
-                 * @param first 
-                 * @param second 
-                 * @param elements 
+                 *
+                 * @param first
+                 * @param second
+                 * @param elements
                  */
-                Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::vector<std::size_t> &inner, const std::vector<std::size_t> &outer, const std::vector<T> &values): 
-                first{first}, second{second}, inner{inner}, outer{outer}, values{values} {
-                    this->compressed = true;
-
+                Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::vector<std::size_t> &inner, const std::vector<std::size_t> &outer, const std::vector<T> &values):
+                first{first}, second{second}, compressed{true}, inner{inner}, outer{outer}, values{values} {
                     #ifndef NDEBUG // Integrity checks.
 
                     // WIP.
@@ -105,9 +103,9 @@ namespace pacs {
 
                 /**
                  * @brief Copies an existing matrix.
-                 * 
-                 * @param matrix 
-                 * @return Matrix<T, O>& 
+                 *
+                 * @param matrix
+                 * @return Matrix<T, O>&
                  */
                 Matrix<T, O> &operator =(const Matrix<T, O> &matrix) {
                     #ifndef NDEBUG
@@ -137,10 +135,10 @@ namespace pacs {
 
                 /**
                  * @brief Const call operator.
-                 * 
-                 * @param j 
-                 * @param k 
-                 * @return T 
+                 *
+                 * @param j
+                 * @param k
+                 * @return T
                  */
                 T operator ()(const std::size_t &j, const std::size_t &k) const {
                     #ifndef NDEBUG // Out-of-bound check.
@@ -163,10 +161,10 @@ namespace pacs {
 
                 /**
                  * @brief Call operator.
-                 * 
-                 * @param j 
-                 * @param k 
-                 * @return T& 
+                 *
+                 * @param j
+                 * @param k
+                 * @return T&
                  */
                 // T &operator ()(const std::size_t &j, const std::size_t &k) {
                 //     #ifndef NDEBUG // Out-of-bound check.
@@ -181,8 +179,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the number of rows.
-                 * 
-                 * @return std::size_t 
+                 *
+                 * @return std::size_t
                  */
                 constexpr std::size_t rows() const {
                     if constexpr (O == Row)
@@ -193,8 +191,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the number of columns.
-                 * 
-                 * @return std::size_t 
+                 *
+                 * @return std::size_t
                  */
                 constexpr std::size_t columns() const {
                     if constexpr (O == Column)
@@ -202,24 +200,24 @@ namespace pacs {
 
                     return this->second;
                 }
-                
+
                 /**
                  * @brief Returns the matrix' shape: Rows x Columns.
-                 * 
-                 * @return constexpr std::pair<std::size_t, std::size_t> 
+                 *
+                 * @return constexpr std::pair<std::size_t, std::size_t>
                  */
                 constexpr std::pair<std::size_t, std::size_t> shape() const {
                     return {this->rows(), this->columns()};
                 }
 
                 /**
-                 * @brief Returns a reshaped matrix.
-                 * 
-                 * @param first 
-                 * @param second 
-                 * @return Matrix<T, O> 
+                 * @brief Returns a reshaped matrix in the same (un)compressed state.
+                 *
+                 * @param first
+                 * @param second
+                 * @return Matrix<T, O>
                  */
-                Matrix<T, O> reshape(const std::size_t &first, const std::size_t &second, const bool &compress = false) {
+                Matrix<T, O> reshape(const std::size_t &first, const std::size_t &second, const bool &compress = false) const {
                     if(!(this->compressed)) {
                         Matrix<T, O> matrix{first, second, this->elements};
 
@@ -228,7 +226,7 @@ namespace pacs {
 
                         return matrix;
                     }
-                        
+
                     Matrix<T, O> matrix{first, second, this->inner, this->outer, this->values};
 
                     if(compress)
@@ -242,7 +240,7 @@ namespace pacs {
 
                 /**
                  * @brief Compresses an uncompressed matrix.
-                 * 
+                 *
                  */
                 void compress() {
                     if(this->compressed)
@@ -271,14 +269,14 @@ namespace pacs {
                         ++current[0];
                         ++next[0];
                     }
-                    
+
                     this->compressed = true;
-                    this->elements.clear();                
+                    this->elements.clear();
                 }
 
                 /**
                  * @brief Uncompresses a compressed matrix.
-                 * 
+                 *
                  */
                 void uncompress() {
                     if(!(this->compressed))
@@ -294,26 +292,26 @@ namespace pacs {
                     this->compressed = false;
                     this->inner.clear();
                     this->outer.clear();
-                    this->values.clear();            
+                    this->values.clear();
                 }
 
                 /**
                  * @brief Returns the compressed state.
-                 * 
-                 * @return true 
-                 * @return false 
+                 *
+                 * @return true
+                 * @return false
                  */
                 bool is_compressed() const {
                     return this->compressed;
                 }
 
                 // ROWS AND COLUMNS.
-                
+
                 /**
                  * @brief Returns the j-th row.
-                 * 
-                 * @param j 
-                 * @return std::vector<T> 
+                 *
+                 * @param j
+                 * @return std::vector<T>
                  */
                 std::vector<T> row(const std::size_t &j) const {
                     #ifndef NDEBUG
@@ -343,7 +341,7 @@ namespace pacs {
                             for(const auto &[key, value]: this->elements) {
                                 if(key[1] == j)
                                     row[key[0]] = value;
-                            } 
+                            }
                         } else {
                             std::size_t index = 0;
                             for(std::size_t i = 0; i < this->outer.size(); ++i) { // Full iteration on the outer vector.
@@ -364,9 +362,9 @@ namespace pacs {
 
                 /**
                  * @brief Returns the j-th column.
-                 * 
-                 * @param j 
-                 * @return std::vector<T> 
+                 *
+                 * @param j
+                 * @return std::vector<T>
                  */
                 std::vector<T> column(const std::size_t &j) const {
                     #ifndef NDEBUG
@@ -396,7 +394,7 @@ namespace pacs {
                             for(const auto &[key, value]: this->elements) {
                                 if(key[1] == j)
                                     column[key[0]] = value;
-                            } 
+                            }
                         } else {
                             std::size_t index = 0;
                             for(std::size_t i = 0; i < this->outer.size(); ++i) { // Full iteration on the outer vector.
@@ -419,9 +417,9 @@ namespace pacs {
 
                 /**
                  * @brief Returns the product of Matrix x (column) Vector.
-                 * 
-                 * @param vector 
-                 * @return std::vector<T> 
+                 *
+                 * @param vector
+                 * @return std::vector<T>
                  */
                 std::vector<T> operator *(const std::vector<T> &vector) const {
                     #ifndef NDEBUG // Vector size check.
@@ -430,7 +428,7 @@ namespace pacs {
 
                     std::vector<T> result;
                     result.resize(vector.size());
-                        
+
                     for(std::size_t j = 0; j < vector.size() ; ++j) {
                         std::vector<T> row = this->row(j);
 
@@ -444,10 +442,10 @@ namespace pacs {
 
                 /**
                  * @brief Returns the product of (row) Vector x Matrix.
-                 * 
-                 * @param vector 
-                 * @param matrix 
-                 * @return std::vector<T> 
+                 *
+                 * @param vector
+                 * @param matrix
+                 * @return std::vector<T>
                  */
                 friend std::vector<T> operator *(const std::vector<T> &vector, const Matrix<T, O> &matrix) {
                     #ifndef NDEBUG // Vector size check.
@@ -472,10 +470,10 @@ namespace pacs {
 
                 /**
                  * @brief Matrix output.
-                 * 
-                 * @param ost 
-                 * @param matrix 
-                 * @return std::ostream& 
+                 *
+                 * @param ost
+                 * @param matrix
+                 * @return std::ostream&
                  */
                 friend std::ostream &operator <<(std::ostream &ost, const Matrix<T, O> &matrix) {
                     if(!(matrix.compressed)) {
@@ -496,7 +494,7 @@ namespace pacs {
 
                         for(const auto &value: matrix.outer)
                             ost << value << " ";
-                        
+
                         ost << std::endl <<  "Values: ";
 
                         for(const auto &value: matrix.values)
