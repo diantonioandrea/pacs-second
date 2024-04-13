@@ -38,7 +38,7 @@ namespace pacs {
             std::string line;
 
             if(!(file))
-                std::cerr << "Could not load a Matrix from the specified file: \"" << filename << "\"" << std::endl;
+                std::cerr << "Could not load a Matrix [" << filename << "]" << std::endl;
 
             // Matrix size.
             std::getline(file, line); // Useless info.
@@ -60,7 +60,13 @@ namespace pacs {
 
             file.close();
 
-            return Matrix<double, Row>{rows, columns, elements};
+            // Matrix.
+            Matrix<double, Row> matrix{rows, columns, elements};
+
+            if(verbose)
+                std::cerr << "Loaded a " << rows << " by " << columns << ", " << elements.size() << " elements Matrix [" << filename << "]\n" << matrix << std::endl;
+
+            return matrix;
         }
 
         /**
