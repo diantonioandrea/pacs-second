@@ -31,6 +31,12 @@ namespace pacs {
          *
          */
         enum Order {Row, Column};
+        
+        /**
+         * @brief Norms.
+         * 
+         */
+        enum Norm {One, Infinity, Frobenius};
 
         /**
          * @brief Sparse matrix class.
@@ -464,6 +470,39 @@ namespace pacs {
                     }
 
                     return result;
+                }
+
+                // NORM.
+
+                /**
+                 * @brief Returns a norm for the Matrix.
+                 * 
+                 * @tparam N 
+                 * @return double 
+                 */
+                template<Norm N = Frobenius>
+                double norm() const {
+                    double norm = 0.0;
+
+                    if constexpr (N == One) {
+
+                        // WIP.
+
+                    }
+
+                    if constexpr (N == Infinity) {
+
+                        // WIP.
+
+                    }
+
+                    if constexpr (N == Frobenius) {
+                       
+                        // WIP.
+
+                    }
+
+                    return norm;
                 }
 
                 // OUTPUT.
