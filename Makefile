@@ -1,12 +1,12 @@
 .PHONY: all clean
-CXXFLAGS = -Wall -pedantic -std=c++20  -I./include
+CXXFLAGS = -Wall -pedantic -std=c++20  -I./include -O3
 
 # Extras.
 CPPFLAGS = # -I$(PACS_ROOT)/include
 LDFLAGS = # -L$(PACS_ROOT)/lib
 
 # Optimization.
-# CXXFLAGS += -O2 -DNDEBUG
+# CXXFLAGS += -DNDEBUG
 
 EXEC = main
 SOURCE = main.cpp

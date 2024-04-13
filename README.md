@@ -33,8 +33,8 @@ Execute the code:
 
 Furthermore, the executable could potentially be accelerated by removing the comment from the following line in the [Makefile](./Makefile)[^1]:
 
-[^1]: This ignores some safety checks.
+[^1]: This ignores some safety and integrity checks.
 
 ```make
-# CXXFLAGS += -O2 -DNDEBUG
+# CXXFLAGS += -DNDEBUG
 ```
