@@ -14,4 +14,7 @@
 // Matrices.
 #include <Matrix.hpp>
 
+// Market format.
+#include <Market.hpp>
+
 #endif

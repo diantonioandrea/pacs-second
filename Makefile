@@ -11,19 +11,19 @@ LDFLAGS = # -L$(PACS_ROOT)/lib
 EXEC = main
 SOURCE = main.cpp
 OBJECT = main.o
-# OBJECTS = 
+OBJECTS = Market.o
 
 # Rules.
 all: $(EXEC)
 
-$(EXEC): $(OBJECT) # $(OBJECTS)
+$(EXEC): $(OBJECT) $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $(EXEC)
 
 $(OBJECT): $(SOURCE)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
-# $(OBJECTS): %.o: ./src/%.cpp
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+$(OBJECTS): %.o: ./src/%.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Clean.
 clean:
