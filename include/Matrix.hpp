@@ -85,6 +85,7 @@ namespace pacs {
                 Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::map<std::array<std::size_t, 2>, T> elements):
                 first{first}, second{second}, elements{elements} {
                     #ifndef NDEBUG // Integrity checks.
+                    assert((first > 0) && (second > 0));
 
                     // WIP.
 
@@ -101,6 +102,7 @@ namespace pacs {
                 Matrix<T, O>(const std::size_t &first, const std::size_t &second, const std::vector<std::size_t> &inner, const std::vector<std::size_t> &outer, const std::vector<T> &values):
                 first{first}, second{second}, compressed{true}, inner{inner}, outer{outer}, values{values} {
                     #ifndef NDEBUG // Integrity checks.
+                    assert((first > 0) && (second > 0));
 
                     // WIP.
 
@@ -432,6 +434,29 @@ namespace pacs {
                     }
 
                     return column;
+                }
+
+                // METHODS.
+
+                /**
+                 * @brief Returns the 'sparsity' of the Matrix.
+                 * 
+                 * @return double 
+                 */
+                double sparsity() const {
+                    if(!(this->compressed))
+                        return static_cast<double>(this->elements.size()) / static_cast<double>(this->first * this->second);
+
+                    return static_cast<double>(this->values.size()) / static_cast<double>(this->first * this->second);
+                }
+
+                /**
+                 * @brief Returns the 'density' of the Matrix.
+                 * 
+                 * @return double 
+                 */
+                double density() const {
+                    return 1.0 - this->sparsity();
                 }
 
                 // OPERATIONS.
