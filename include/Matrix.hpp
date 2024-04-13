@@ -512,6 +512,21 @@ namespace pacs {
                     return result;
                 }
 
+                /**
+                 * @brief Handles the vector product on a single-column Matrix.
+                 * 
+                 * @param matrix 
+                 * @return std::vector<T> 
+                 */
+                std::vector<T> operator *(const Matrix<T, O> &matrix) const {
+                    #ifndef NDEBUG
+                    assert(matrix.columns() == 1); // Only accepts N by 1 Matrix.
+                    assert(this->columns() == matrix.rows());
+                    #endif
+
+                    return *this * matrix.column(0);
+                }
+
                 // NORM.
 
                 /**
