@@ -108,6 +108,21 @@ namespace pacs {
                 }
 
                 /**
+                 * @brief Copy constructor.
+                 * 
+                 * @param matrix 
+                 */
+                Matrix<T, O>(const Matrix<T, O> &matrix): first{matrix.first}, second{matrix.second} {
+                    if(!(matrix.compressed)) {
+                        this->elements = matrix.elements;
+                    } else {
+                        this->inner = matrix.inner;
+                        this->outer = matrix.outer;
+                        this->values = matrix.values;
+                    }
+                }
+
+                /**
                  * @brief Copies an existing matrix.
                  *
                  * @param matrix
