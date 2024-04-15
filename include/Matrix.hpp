@@ -334,7 +334,7 @@ namespace pacs {
                  * @return true
                  * @return false
                  */
-                bool is_compressed() const {
+                inline bool is_compressed() const {
                     return this->compressed;
                 }
 
@@ -447,7 +447,7 @@ namespace pacs {
                  *
                  * @return double
                  */
-                double sparsity() const {
+                inline double sparsity() const {
                     if(!(this->compressed))
                         return static_cast<double>(this->elements.size()) / static_cast<double>(this->first * this->second);
 
@@ -459,7 +459,7 @@ namespace pacs {
                  *
                  * @return double
                  */
-                double density() const {
+                inline double density() const {
                     return 1.0 - this->sparsity();
                 }
 
