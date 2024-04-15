@@ -1,5 +1,5 @@
 .PHONY: all clean
-CXXFLAGS = -Wall -pedantic -std=c++20  -I./include -O3
+CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
 # Extras.
 CPPFLAGS = # -I$(PACS_ROOT)/include
