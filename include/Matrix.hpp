@@ -477,7 +477,6 @@ namespace pacs {
                         }
                     }
 
-                    // 
                     if constexpr (O == Column) {
                         if(!(this->compressed)) { // Slower.
                             
