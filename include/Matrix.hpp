@@ -293,12 +293,17 @@ namespace pacs {
                         for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.lower_bound(next))).first; ++it) {
                             auto [key, value] = (*it);
 
-                            // std::abs : T -> floating_point must be defined for this to work.
-                            if(std::abs(value) > TOLERANCE_PACS) {
+                            #ifdef ZCHECK_PACS // std::abs : T -> floating_point must be defined for this to work.
+                                if(std::abs(value) > TOLERANCE_PACS) {
+                                    this->outer.emplace_back(key[1]);
+                                    this->values.emplace_back(value);
+                                    ++index;
+                                }
+                            #else
                                 this->outer.emplace_back(key[1]);
                                 this->values.emplace_back(value);
                                 ++index;
-                            }
+                            #endif
                         }
 
                         this->inner[j] = index;
@@ -561,36 +566,7 @@ namespace pacs {
                     assert(this->columns() == matrix.rows());
                     #endif
 
-                    std::map<std::array<std::size_t, 2>, T> elements;
-
-                    for(std::size_t j = 0; j < this->rows(); ++j) {
-                        for(std::size_t k = 0; k < matrix.columns(); ++k) {
-                            std::vector<T> row = this->row(j);
-                            std::vector<T> column = matrix.column(k);
-                            T product = static_cast<T>(0);
-
-                            for(std::size_t h = 0; h < row.size(); ++h)
-                                product += row[h] * column[h];
-
-                            if constexpr (O == Row) {
-                                if(std::abs(product) > TOLERANCE_PACS)
-                                    elements[{j, k}] = product;
-                            } else {
-                                if(std::abs(product) > TOLERANCE_PACS)
-                                    elements[{k, j}] = product;
-                            }
-                        }
-                    }
-
-                    std::size_t first = O == Row ? this->rows() : matrix.columns();
-                    std::size_t second = O == Row ? matrix.columns() : this->rows();
-
-                    Matrix<T, O> result{first, second, elements};
-
-                    if((this->compressed) || (matrix.compressed))
-                        result.compress();
-
-                    return result;
+                    // WIP.
                 }
 
                 // NORM.
