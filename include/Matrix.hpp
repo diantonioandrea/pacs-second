@@ -157,7 +157,7 @@ namespace pacs {
                 // CALL OPERATORS.
 
                 /**
-                 * @brief Const call operator.
+                 * @brief Const call operator, returns the (i, j)-th element.
                  *
                  * @param j
                  * @param k
@@ -183,7 +183,7 @@ namespace pacs {
                 }
 
                 /**
-                 * @brief Call operator.
+                 * @brief Call operator, returns a reference to the (i, j)-th element on uncompressed Matrix.
                  *
                  * @param j
                  * @param k
@@ -202,8 +202,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the number of rows.
-                 *
-                 * @return std::size_t
+                 * 
+                 * @return constexpr std::size_t 
                  */
                 constexpr std::size_t rows() const {
                     if constexpr (O == Row)
@@ -214,8 +214,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the number of columns.
-                 *
-                 * @return std::size_t
+                 * 
+                 * @return constexpr std::size_t 
                  */
                 constexpr std::size_t columns() const {
                     if constexpr (O == Column)
