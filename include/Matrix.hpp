@@ -31,6 +31,9 @@
 #define TOLERANCE_PACS 1E-8
 #endif
 
+// Zero checks.
+#define ZCHECK_PACS
+
 namespace pacs {
 
     namespace algebra {
@@ -450,17 +453,45 @@ namespace pacs {
                  */
                 std::vector<T> operator *(const std::vector<T> &vector) const {
                     #ifndef NDEBUG // Vector size check.
-                    assert(vector.size() == this->rows());
+                    assert(vector.size() == this->columns());
                     #endif
 
                     std::vector<T> result;
-                    result.resize(vector.size());
+                    result.resize(this->rows(), static_cast<T>(0));
 
-                    for(std::size_t j = 0; j < vector.size() ; ++j) {
-                        std::vector<T> row = this->row(j);
+                    // Standard Row x Column product.
+                    if constexpr (O == Row) { // Adapted from the .row() method.
+                        if(!(this->compressed)) { // Slower.
 
-                        for(std::size_t k = 0; k < this->columns(); ++k) {
-                            result[j] += row[k] * vector[k];
+                            // Full iteration on non-zero elements.
+                            for(const auto &[key, value]: this->elements)
+                                result[key[0]] += value * vector[key[1]];
+
+                        } else { // Faster.
+
+                            // Standard product.
+                            for(std::size_t j = 0; j < result.size(); ++j) {
+                                for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
+                                    result[j] += this->values[i] * vector[this->outer[i]];
+                            }
+                        }
+                    }
+
+                    // 
+                    if constexpr (O == Column) {
+                        if(!(this->compressed)) { // Slower.
+                            
+                            // Full iteration on non-zero elements.
+                            for(const auto &[key, value]: this->elements)
+                                result[key[1]] += value * vector[key[0]];
+
+                        } else { // Faster.
+
+                            // Linear combination of columns.
+                            for(std::size_t j = 0; j < result.size(); ++j) {
+                                for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
+                                    result[this->outer[i]] += this->values[i] * vector[j];
+                            }
                         }
                     }
 
@@ -476,19 +507,13 @@ namespace pacs {
                  */
                 friend std::vector<T> operator *(const std::vector<T> &vector, const Matrix<T, O> &matrix) {
                     #ifndef NDEBUG // Vector size check.
-                    assert(vector.size() == matrix.columns());
+                    assert(vector.size() == matrix.rows());
                     #endif
 
                     std::vector<T> result;
-                    result.resize(vector.size());
+                    result.resize(matrix.columns(), static_cast<T>(0));
 
-                    for(std::size_t j = 0; j < vector.size() ; ++j) {
-                        std::vector<T> column = matrix.column(j);
-
-                        for(std::size_t k = 0; k < matrix.rows(); ++k) {
-                            result[j] += vector[k] * column[k];
-                        }
-                    }
+                    // WIP.
 
                     return result;
                 }
