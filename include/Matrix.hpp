@@ -376,15 +376,12 @@ namespace pacs {
                                     row[key[0]] = value;
                             }
                         } else {
-                            std::size_t index = 0;
-                            for(std::size_t i = 0; i < this->outer.size(); ++i) { // Full iteration on the outer vector.
-                                if(this->outer[i] == j) {
-                                    for(std::size_t k = index; k < this->inner.size(); k++) {
-                                        if(this->inner[index] > i)
-                                            break;
+                            for(std::size_t i = 0; i < this->inner.size() - 1; ++i) {
+                                for(std::size_t k = this->inner[i]; k < this->inner[i + 1]; ++k) {
+                                    if(this->outer[k] == j) {
+                                        row[i] = this->values[k];
+                                        break;
                                     }
-
-                                    row[index - 1] = this->values[i];
                                 }
                             }
                         }
@@ -429,15 +426,12 @@ namespace pacs {
                                     column[key[0]] = value;
                             }
                         } else {
-                            std::size_t index = 0;
-                            for(std::size_t i = 0; i < this->outer.size(); ++i) { // Full iteration on the outer vector.
-                                if(this->outer[i] == j) {
-                                    for(std::size_t k = index; k < this->inner.size(); k++) {
-                                        if(this->inner[index] > i)
-                                            break;
+                            for(std::size_t i = 0; i < this->inner.size() - 1; ++i) {
+                                for(std::size_t k = this->inner[i]; k < this->inner[i + 1]; ++k) {
+                                    if(this->outer[k] == j) {
+                                        column[i] = this->values[k];
+                                        break;
                                     }
-
-                                    column[index - 1] = this->values[i];
                                 }
                             }
                         }
@@ -547,17 +541,37 @@ namespace pacs {
                  */
                 template<Norm N = Frobenius>
                 double norm() const {
-                    double norm = 0.0;
+                    double norm = 0.0, max = 0.0;
 
                     if constexpr (N == One) {
 
-                        // WIP.
+                        for(std::size_t j = 0; j < this->columns(); ++j) {
+                            double sum = 0.0;
+                            std::vector<T> column = this->column(j);
+
+                            for(const auto &value: column) // Inefficient.
+                                sum += std::abs(value);
+
+                            max = sum > max ? sum : max;
+                        }
+
+                        norm = max;
 
                     }
 
                     if constexpr (N == Infinity) {
 
-                        // WIP.
+                        for(std::size_t j = 0; j < this->rows(); ++j) {
+                            double sum = 0.0;
+                            std::vector<T> row = this->row(j);
+
+                            for(const auto &value: row) // Inefficient.
+                                sum += std::abs(value);
+
+                            max = sum > max ? sum : max;
+                        }
+
+                        norm = max;
 
                     }
 
