@@ -21,7 +21,7 @@ pacs::algebra::Matrix<T, O>
 
 which is designed to handle sparse matrices within $\mathbb{R}^{n \times m}$.
 
-Sparse matrices can be instantiated with any type T, and users can specify an ordering, either row-column or column-row, thanks to the following:
+Sparse matrices can be instantiated with any type `T`, and users can specify an ordering, either row-column or column-row, thanks to the following:
 
 ```cpp
 namespace pacs {
@@ -31,9 +31,32 @@ namespace pacs {
 }
 ```
 
-Furthermore, these matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matrix<T, O> * Matrix<T, O>` matrix row-column product.
+Storage is designed to accommodate either a dynamic allocation following a **COOmap** (Coordinate Map) format or compression into a **CSR** (Compressed Sparse Row) or **CSC** (Compressed Sparse Column) format, contingent upon its ordering. Constructors adhere to this principle by accepting either a single map for the **COOmap** format or three vectors for the **CSR**/**CSC** format, along with matrix sizing consistent with its ordering.
 
-A template method `market` is also present, which enables the user to load a matrix from a text file using the Matrix Market Format.
+Reading and writing are facilitated through the following call operators:
+
+```cpp
+T operator ()(const std::size_t &, const std::size_t &) const;
+T &operator ()(const std::size_t &, const std::size_t &);
+```
+
+with the latter only acting on uncompressed matrices.
+
+These matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matrix<T, O> * Matrix<T, O>` matrix row-column product.
+
+Moreover, these matrices have a template method `norm` which accepts, as a template parameter, one of the followings:
+
+```cpp
+namespace pacs {
+    namespace algebra {
+        enum class Norm { One, Infinity, Frobenius };
+    }
+}
+```
+
+and returns the corresponding matrix norm.
+
+A template function `market` is also present, which enables the user to load a matrix from a text file using the Matrix Market Format.
 
 ```cpp
 namespace pacs {
