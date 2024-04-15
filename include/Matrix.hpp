@@ -512,7 +512,40 @@ namespace pacs {
                     std::vector<T> result;
                     result.resize(matrix.columns(), static_cast<T>(0));
 
-                    // WIP.
+                    // Standard Row x Column product.
+                    if constexpr (O == Column) {
+                        if(!(matrix.compressed)) { // Slower.
+
+                            // Full iteration on non-zero elements.
+                            for(const auto &[key, value]: matrix.elements)
+                                result[key[0]] += vector[key[1]] * value;
+
+                        } else { // Faster.
+
+                            // Standard product.
+                            for(std::size_t j = 0; j < result.size(); ++j) {
+                                for(std::size_t i = matrix.inner[j]; i < matrix.inner[j + 1]; ++i)
+                                    result[j] += vector[matrix.outer[i]] * matrix.values[i];
+                            }
+                        }
+                    }
+
+                    if constexpr (O == Row) {
+                        if(!(matrix.compressed)) { // Slower.
+
+                            // Full iteration on non-zero elements.
+                            for(const auto &[key, value]: matrix.elements)
+                                result[key[1]] += vector[key[0]] * value;
+
+                        } else { // Faster.
+
+                            // Linear combination of rows.
+                            for(std::size_t j = 0; j < result.size(); ++j) {
+                                for(std::size_t i = matrix.inner[j]; i < matrix.inner[j + 1]; ++i)
+                                    result[matrix.outer[i]] += vector[j] * matrix.values[i];
+                            }
+                        }
+                    }
 
                     return result;
                 }
