@@ -40,7 +40,7 @@ namespace pacs {
             std::cout << "Sparsity: " << matrix.sparsity() << "." << std::endl;
             std::cout << "Ordering: " << (O == Row ? "row-first" : "column-first") << "." << std::endl;
             std::cout << "Compression: " << (matrix.is_compressed() ? "yes" : "no") << "." << std::endl;
-            std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1E6 << " seconds." << std::endl;
+            std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1E6 << " second(s)." << std::endl;
 
         }
 
