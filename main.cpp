@@ -13,8 +13,6 @@
 // Includes.
 #include "main.hpp"
 
-#include <complex>
-
 int main(int argc, char **argv) {
     // Default "splash".
     std::cout << "PACS - Second challenge - Andrea Di Antonio." << std::endl;
