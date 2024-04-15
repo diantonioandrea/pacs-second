@@ -17,4 +17,7 @@
 // Market format.
 #include <Market.hpp>
 
+// Testing.
+#include <Timer.hpp>
+
 #endif
