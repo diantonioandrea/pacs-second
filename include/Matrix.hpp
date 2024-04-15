@@ -67,7 +67,7 @@ namespace pacs {
                 // COOmap dynamic storage format.
                 mutable std::map<std::array<std::size_t, 2>, T> elements;
 
-                // CSR/CSC compressed storage formate.
+                // CSR/CSC compressed storage format.
                 std::vector<std::size_t> inner;
                 std::vector<std::size_t> outer;
                 std::vector<T> values;
