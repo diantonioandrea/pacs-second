@@ -22,6 +22,15 @@
 // Assertions.
 #include <cassert>
 
+// Math.
+#include <complex>
+#include <cmath>
+
+// Zero tolerance.
+#ifndef TOLERANCE_PACS
+#define TOLERANCE_PACS 1E-8
+#endif
+
 namespace pacs {
 
     namespace algebra {
@@ -281,7 +290,8 @@ namespace pacs {
                         for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.lower_bound(next))).first; ++it) {
                             auto [key, value] = (*it);
 
-                            if(value != static_cast<T>(0)) { // WIP.
+                            // std::abs : T -> floating_point must be defined for this to work.
+                            if(std::abs(value) > TOLERANCE_PACS) {
                                 this->outer.emplace_back(key[1]);
                                 this->values.emplace_back(value);
                                 ++index;
@@ -552,8 +562,16 @@ namespace pacs {
                     }
 
                     if constexpr (N == Frobenius) {
-                       
-                        // WIP.
+                        
+                        if(!(this->compressed)) {
+                            for(const auto &[key, value]: this->elements)
+                                norm += static_cast<double>(std::abs(value) * std::abs(value));
+                        } else {
+                            for(const auto &value: this->values)
+                                norm += static_cast<double>(std::abs(value) * std::abs(value));
+                        }
+
+                        norm = std::sqrt(norm);
 
                     }
 
