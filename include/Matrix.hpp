@@ -440,29 +440,6 @@ namespace pacs {
                     return column;
                 }
 
-                // METHODS.
-
-                /**
-                 * @brief Returns the 'sparsity' of the Matrix.
-                 *
-                 * @return double
-                 */
-                inline double sparsity() const {
-                    if(!(this->compressed))
-                        return static_cast<double>(this->elements.size()) / static_cast<double>(this->first * this->second);
-
-                    return static_cast<double>(this->values.size()) / static_cast<double>(this->first * this->second);
-                }
-
-                /**
-                 * @brief Returns the 'density' of the Matrix.
-                 *
-                 * @return double
-                 */
-                inline double density() const {
-                    return 1.0 - this->sparsity();
-                }
-
                 // OPERATIONS.
 
                 /**
@@ -618,6 +595,29 @@ namespace pacs {
                     }
 
                     return norm;
+                }
+
+                // METHODS.
+
+                /**
+                 * @brief Returns the 'sparsity' of the Matrix.
+                 *
+                 * @return double
+                 */
+                inline double sparsity() const {
+                    if(!(this->compressed))
+                        return static_cast<double>(this->elements.size()) / static_cast<double>(this->first * this->second);
+
+                    return static_cast<double>(this->values.size()) / static_cast<double>(this->first * this->second);
+                }
+
+                /**
+                 * @brief Returns the 'density' of the Matrix.
+                 *
+                 * @return double
+                 */
+                inline double density() const {
+                    return 1.0 - this->sparsity();
                 }
 
                 // OUTPUT.
