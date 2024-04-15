@@ -16,7 +16,12 @@ This repository presents an implementation of sparse matrices at the MSc level.
 It introduces the following class:
 
 ```cpp
-pacs::algebra::Matrix<T, O>
+namespace pacs {
+    namespace algebra {
+        template<typename T, Order O>
+        class Matrix {...};
+    }
+}
 ```
 
 which is designed to handle sparse matrices within $\mathbb{R}^{n \times m}$.
