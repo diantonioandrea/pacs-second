@@ -539,9 +539,11 @@ namespace pacs {
                                 product += row[h] * column[h];
 
                             if constexpr (O == Row) {
-                                elements[{j, k}] = product;
+                                if(std::abs(product) > TOLERANCE_PACS)
+                                    elements[{j, k}] = product;
                             } else {
-                                elements[{k, j}] = product;
+                                if(std::abs(product) > TOLERANCE_PACS)
+                                    elements[{k, j}] = product;
                             }
                         }
                     }
