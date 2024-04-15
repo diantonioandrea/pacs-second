@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
 # Optimization.
