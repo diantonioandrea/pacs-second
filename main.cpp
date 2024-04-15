@@ -12,6 +12,7 @@
 
 // Includes.
 #include "main.hpp"
+using namespace pacs; // For ease of reading.
 
 int main(int argc, char **argv) {
     // Default "splash".
