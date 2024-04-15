@@ -189,14 +189,14 @@ namespace pacs {
                  * @param k
                  * @return T&
                  */
-                // T &operator ()(const std::size_t &j, const std::size_t &k) {
-                //     #ifndef NDEBUG // Out-of-bound check.
-                //     assert((j < first) && (k < second));
-                //     assert(!(this->compressed));
-                //     #endif
+                T &operator ()(const std::size_t &j, const std::size_t &k) {
+                    #ifndef NDEBUG // Out-of-bound and (un)compression check.
+                    assert((j < first) && (k < second));
+                    assert(!(this->compressed));
+                    #endif
 
-                //     return this->elements[{j, k}];
-                // }
+                    return this->elements[{j, k}];
+                }
 
                 // SHAPE.
 
