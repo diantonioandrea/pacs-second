@@ -40,10 +40,10 @@ namespace pacs {
          *
          */
         enum Order {Row, Column};
-        
+
         /**
          * @brief Norms.
-         * 
+         *
          */
         enum Norm {One, Infinity, Frobenius};
 
@@ -120,8 +120,8 @@ namespace pacs {
 
                 /**
                  * @brief Copy constructor.
-                 * 
-                 * @param matrix 
+                 *
+                 * @param matrix
                  */
                 Matrix<T, O>(const Matrix<T, O> &matrix): first{matrix.first}, second{matrix.second} {
                     if(!(matrix.compressed)) {
@@ -211,8 +211,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the number of rows.
-                 * 
-                 * @return constexpr std::size_t 
+                 *
+                 * @return constexpr std::size_t
                  */
                 constexpr std::size_t rows() const {
                     if constexpr (O == Row)
@@ -223,8 +223,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the number of columns.
-                 * 
-                 * @return constexpr std::size_t 
+                 *
+                 * @return constexpr std::size_t
                  */
                 constexpr std::size_t columns() const {
                     if constexpr (O == Column)
@@ -444,8 +444,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the 'sparsity' of the Matrix.
-                 * 
-                 * @return double 
+                 *
+                 * @return double
                  */
                 double sparsity() const {
                     if(!(this->compressed))
@@ -456,8 +456,8 @@ namespace pacs {
 
                 /**
                  * @brief Returns the 'density' of the Matrix.
-                 * 
-                 * @return double 
+                 *
+                 * @return double
                  */
                 double density() const {
                     return 1.0 - this->sparsity();
@@ -517,27 +517,53 @@ namespace pacs {
                 }
 
                 /**
-                 * @brief Handles the vector product on a single-column Matrix.
-                 * 
-                 * @param matrix 
-                 * @return std::vector<T> 
+                 * @brief Returns the Matrix x Matrix product.
+                 *
+                 * @param matrix
+                 * @return Matrix<T, O>
                  */
-                std::vector<T> operator *(const Matrix<T, O> &matrix) const {
+                Matrix<T, O> operator *(const Matrix<T, O> &matrix) const {
                     #ifndef NDEBUG
-                    assert(matrix.columns() == 1); // Only accepts N by 1 Matrix.
                     assert(this->columns() == matrix.rows());
                     #endif
 
-                    return *this * matrix.column(0);
+                    std::map<std::array<std::size_t, 2>, T> elements;
+
+                    for(std::size_t j = 0; j < this->rows(); ++j) {
+                        for(std::size_t k = 0; k < matrix.columns(); ++k) {
+                            std::vector<T> row = this->row(j);
+                            std::vector<T> column = matrix.column(k);
+                            T product = static_cast<T>(0);
+
+                            for(std::size_t h = 0; h < row.size(); ++h)
+                                product += row[h] * column[h];
+
+                            if constexpr (O == Row) {
+                                elements[{j, k}] = product;
+                            } else {
+                                elements[{k, j}] = product;
+                            }
+                        }
+                    }
+
+                    std::size_t first = O == Row ? this->rows() : matrix.columns();
+                    std::size_t second = O == Row ? matrix.columns() : this->rows();
+
+                    Matrix<T, O> result{first, second, elements};
+
+                    if((this->compressed) || (matrix.compressed))
+                        result.compress();
+
+                    return result;
                 }
 
                 // NORM.
 
                 /**
                  * @brief Returns a norm for the Matrix.
-                 * 
-                 * @tparam N 
-                 * @return double 
+                 *
+                 * @tparam N
+                 * @return double
                  */
                 template<Norm N = Frobenius>
                 double norm() const {
@@ -576,7 +602,7 @@ namespace pacs {
                     }
 
                     if constexpr (N == Frobenius) {
-                        
+
                         if(!(this->compressed)) {
                             for(const auto &[key, value]: this->elements)
                                 norm += static_cast<double>(std::abs(value) * std::abs(value));
