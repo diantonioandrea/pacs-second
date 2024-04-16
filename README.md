@@ -5,6 +5,7 @@ _A Sparse Matrix_
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Overview](#overview)
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
     - [Compilation and Execution](#compilation-and-execution)
@@ -73,6 +74,17 @@ namespace pacs {
 ```
 
 This method accepts the file path and an optional verbosity flag.
+
+## Overview
+
+Key components include:
+
+- `main.cpp`: Core script serving as a testing suite.
+- `main.hpp`: Primary includes for `main.cpp`.
+- `include/`:
+    - `Matrix.hpp`: Definition for the Matrix class.
+    - `Market.hpp`: Definition for the market loader function.
+    - `Timer.hpp`: Definition for the timer function.
 
 ## Setup
 
