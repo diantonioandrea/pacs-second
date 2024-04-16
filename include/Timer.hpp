@@ -25,12 +25,13 @@ namespace pacs {
         template<typename T, Order O>
         void timer(const Matrix<T, O> &matrix, const std::vector<T> &vector, const std::size_t &tests = 5E5) {
 
+            std::cout << "\nTesting for Matrix x Vector product." << std::endl;
             std::size_t products = 0;
 
-            // Start.
-            std::cout << "\nTesting for Matrix x Vector product." << std::endl;
+            // Tests.
             auto start = std::chrono::high_resolution_clock::now();
 
+            // Matrix x Vector.
             if(matrix.columns() == vector.size()) {
                 std::cout << "- Testing Matrix x Vector." << std::endl;
                 ++products;
@@ -39,6 +40,7 @@ namespace pacs {
                     matrix * vector;
             }
 
+            // Vector x Matrix.
             if(matrix.rows() == vector.size()) {
                 std::cout << "- Testing Vector x Matrix." << std::endl;
                 ++products;
@@ -47,7 +49,6 @@ namespace pacs {
                     vector * matrix;
             }
 
-            // Stop.
             auto stop = std::chrono::high_resolution_clock::now();
 
             // Results.
