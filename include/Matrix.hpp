@@ -451,7 +451,7 @@ namespace pacs {
                 // OPERATIONS.
 
                 /**
-                 * @brief Returns the product of Matrix x (column) Vector.
+                 * @brief Returns the product of Matrix x Vector.
                  *
                  * @param vector
                  * @return std::vector<T>
@@ -464,8 +464,10 @@ namespace pacs {
                     std::vector<T> result;
                     result.resize(this->rows(), static_cast<T>(0));
 
+                    // Adapted from the .row() and .column() methods.
+
                     // Standard Row x Column product.
-                    if constexpr (O == Row) { // Adapted from the .row() method.
+                    if constexpr (O == Row) {
                         if(!(this->compressed)) { // Slower.
 
                             // Full iteration on non-zero elements.
@@ -503,7 +505,7 @@ namespace pacs {
                 }
 
                 /**
-                 * @brief Returns the product of (row) Vector x Matrix.
+                 * @brief Returns the product of Vector x Matrix.
                  *
                  * @param vector
                  * @param matrix
@@ -516,6 +518,8 @@ namespace pacs {
 
                     std::vector<T> result;
                     result.resize(matrix.columns(), static_cast<T>(0));
+
+                    // Adapted from the .row() and .column() methods.
 
                     // Standard Row x Column product.
                     if constexpr (O == Column) {
@@ -556,17 +560,33 @@ namespace pacs {
                 }
 
                 /**
-                 * @brief Returns the Matrix x Matrix product.
-                 *
-                 * @param matrix
-                 * @return Matrix<T, O>
+                 * @brief Returns the product of Matrix x Matrix (same ordering).
+                 * 
+                 * @param matrix 
+                 * @return Matrix<T, O> 
                  */
                 Matrix<T, O> operator *(const Matrix<T, O> &matrix) const {
                     #ifndef NDEBUG
                     assert(this->columns() == matrix.rows());
+                    assert(this->compressed == matrix.compressed);
                     #endif
+                    
+                    // Result.
+                    Matrix<T, O> result{this->rows(), matrix.columns()};
 
-                    // WIP.
+                    if constexpr (O == Row) {
+                        
+                        // WIP.
+
+                    }
+
+                    if constexpr (O == Column) {
+                        
+                        // WIP.
+
+                    }
+
+                    return result;
                 }
 
                 // NORM.
