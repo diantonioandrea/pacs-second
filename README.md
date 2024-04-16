@@ -12,7 +12,7 @@ _A Sparse Matrix_
 
 ## Introduction
 
-This repository presents an implementation of sparse matrices at the MSc level.
+This repository presents a header-only template implementation of sparse matrices.
 
 It introduces the following class:
 
