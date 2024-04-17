@@ -12,19 +12,15 @@ LDLIBS = # -lpacs
 EXEC = main
 SOURCE = main.cpp
 OBJECT = main.o
-# OBJECTS = 
 
 # Rules.
 all: $(EXEC)
 
-$(EXEC): $(OBJECT) # $(OBJECTS)
+$(EXEC): $(OBJECT)
 	$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $(EXEC)
 
 $(OBJECT): $(SOURCE)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
-
-# $(OBJECTS): %.o: ./src/%.cpp
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Clean.
 clean:
