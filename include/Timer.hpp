@@ -1,3 +1,13 @@
+/**
+ * @file Timer.hpp
+ * @author Andrea Di Antonio (github.com/diantonioandrea)
+ * @brief 
+ * @date 2024-04-15
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #ifndef TIMER_PACS
 #define TIMER_PACS
 
