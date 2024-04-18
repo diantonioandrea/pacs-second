@@ -131,7 +131,7 @@ namespace pacs {
                  *
                  * @param matrix
                  */
-                Matrix(const Matrix &matrix): first{matrix.first}, second{matrix.second} {
+                Matrix(const Matrix &matrix): first{matrix.first}, second{matrix.second}, compressed{matrix.compressed} {
                     if(!(matrix.compressed)) {
                         this->elements = matrix.elements;
                     } else {
