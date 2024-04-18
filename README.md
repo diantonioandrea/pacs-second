@@ -97,6 +97,8 @@ To begin, clone the repository from [here](https://github.com/diantonioandrea/pa
 
 ### Compilation and Execution
 
+:warning: Ensure the `PACS_ROOT` variable is set to `/path/to/pacs-examples/Examples`, the `tbb` module is loaded and `LD_LIBRARY_PATH` includes `${PACS_ROOT}/lib`.
+
 Compile the code:
 
     make
