@@ -63,9 +63,9 @@ namespace pacs {
                 data >> row >> column >> element;
 
                 if constexpr (O == Row) {
-                    elements[{row, column}] = static_cast<T>(element);
+                    elements[{row - 1, column - 1}] = static_cast<T>(element);
                 } else {
-                    elements[{column, row}] = static_cast<T>(element);
+                    elements[{column - 1, row - 1}] = static_cast<T>(element);
                 }
             }
 
