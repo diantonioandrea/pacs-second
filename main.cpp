@@ -9,7 +9,6 @@
  */
 
 #include <iostream>
-#include <chrono>
 
 // Includes.
 #include "main.hpp"
