@@ -19,6 +19,10 @@ int main(int argc, char **argv) {
     // Default "splash".
     std::cout << "PACS - Second challenge - Andrea Di Antonio." << std::endl;
 
+    #ifdef PARALLEL_PACS
+        std::cout << "Enabled parallel computing." << std::endl;
+    #endif
+
     // Test "subjects".
     algebra::Matrix<double> row_matrix = algebra::market<double>("data/matrix.mtx");
     algebra::Matrix<double, algebra::Column> column_matrix = algebra::market<double, algebra::Column>("data/matrix.mtx");
