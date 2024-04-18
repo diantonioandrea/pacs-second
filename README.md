@@ -9,7 +9,6 @@ _A Sparse Matrix_
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
     - [Compilation and Execution](#compilation-and-execution)
-- [A note on `Matrix<T, O> * Matrix<T, O>`](#a-note-on-matrixt-o--matrixt-o)
 
 ## Introduction
 
@@ -105,7 +104,7 @@ Execute the code:
 
     ./main
 
-Furthermore, the executable could potentially be accelerated by removing the comment from the following line in the same [Makefile](./Makefile)[^1]:
+Furthermore, the executable could potentially be accelerated by removing the comment's `#` from the following line in the same [Makefile](./Makefile)[^1]:
 
 [^1]: This ignores some safety and integrity checks.
 
@@ -113,7 +112,7 @@ Furthermore, the executable could potentially be accelerated by removing the com
 # CXXFLAGS += -DNDEBUG
 ```
 
-and parallel computing can be enabled by removing the comment from the following lines as well[^2]:
+and parallel computing can be enabled by removing, as needed, the comments' `#`s from the following lines as well[^2]:
 
 ``` make
 # CXXFLAGS += -DPARALLEL_PACS
@@ -121,8 +120,4 @@ and parallel computing can be enabled by removing the comment from the following
 # LDLIBS += -ltbb
 ```
 
-[^2]: :warning: Ensure the `tbb` module is loaded.
-
-## A note on `Matrix<T, O> * Matrix<T, O>`
-
-_To be added._
+[^2]: :warning: Ensure the `tbb` module is loaded if needed.
