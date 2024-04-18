@@ -9,6 +9,7 @@ _A Sparse Matrix_
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
     - [Compilation and Execution](#compilation-and-execution)
+- [A note on `Matrix<T, O> * Matrix<T, O>`](#a-note-on-matrixt-o--matrixt-o)
 
 ## Introduction
 
@@ -111,3 +112,7 @@ Furthermore, the executable could potentially be accelerated by removing the com
 ``` make
 # CXXFLAGS += -DNDEBUG
 ```
+
+## A note on `Matrix<T, O> * Matrix<T, O>`
+
+_To be added._
