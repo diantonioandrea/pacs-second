@@ -10,9 +10,9 @@ LDLIBS = -lpacs
 
 # CXXFLAGS += -DNDEBUG
 
-# CXXFLAGS += -DPARALLEL_PACS
-# LDFLAGS += -L$(mkTbbLib)
-# LDLIBS += -ltbb
+CXXFLAGS += -DPARALLEL_PACS
+LDFLAGS += -L$(mkTbbLib)
+LDLIBS += -ltbb
 
 EXEC = main
 SOURCE = main.cpp

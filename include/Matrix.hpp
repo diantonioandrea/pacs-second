@@ -26,6 +26,11 @@
 #include <complex>
 #include <cmath>
 
+// Algorithms.
+#include <algorithm>
+#include <execution>
+#include <ranges>
+
 // Zero tolerance.
 #ifndef TOLERANCE_PACS
 #define TOLERANCE_PACS 1E-8
@@ -346,108 +351,6 @@ namespace pacs {
                     return this->compressed;
                 }
 
-                // ROWS AND COLUMNS.
-
-                /**
-                 * @brief Returns the j-th row.
-                 *
-                 * @param j
-                 * @return std::vector<T>
-                 */
-                std::vector<T> row(const std::size_t &j) const {
-                    #ifndef NDEBUG
-                    assert(j < this->rows());
-                    #endif
-
-                    std::vector<T> row;
-                    row.resize(this->columns(), static_cast<T>(0));
-
-                    if constexpr (O == Row) {
-                        if(!(this->compressed)) {
-                            auto end = j + 1 == this->rows() ? --this->elements.end() : this->elements.lower_bound({j + 1, 0}); // End iterator.
-                            for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*end).first; ++it)
-                                row[(*it).first[1]] = (*it).second;
-
-                            if(j + 1 == this->rows()) // Last element fix.
-                                row[this->columns() - 1] = (*this)(j, this->columns() - 1);
-
-                        } else {
-                            for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
-                                row[this->outer[i]] = this->values[i];
-                        }
-                    }
-
-                    if constexpr (O == Column) {
-                        if(!(this->compressed)) { // Full iteration on non-zero elements.
-                            for(const auto &[key, value]: this->elements) {
-                                if(key[1] == j)
-                                    row[key[0]] = value;
-                            }
-                        } else {
-                            for(std::size_t i = 0; i < this->inner.size() - 1; ++i) {
-                                for(std::size_t k = this->inner[i]; k < this->inner[i + 1]; ++k) {
-                                    if(this->outer[k] == j) {
-                                        row[i] = this->values[k];
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    return row;
-                }
-
-                /**
-                 * @brief Returns the j-th column.
-                 *
-                 * @param j
-                 * @return std::vector<T>
-                 */
-                std::vector<T> column(const std::size_t &j) const {
-                    #ifndef NDEBUG
-                    assert(j < this->columns());
-                    #endif
-
-                    std::vector<T> column;
-                    column.resize(this->rows(), static_cast<T>(0));
-
-                    if constexpr (O == Column) {
-                        if(!(this->compressed)) {
-                            auto end = j + 1 == this->rows() ? --this->elements.end() : this->elements.lower_bound({j + 1, 0}); // End iterator.
-                            for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*end).first; ++it)
-                                column[(*it).first[1]] = (*it).second;
-
-                            if(j + 1 == this->rows()) // Last element fix.
-                                column[this->columns() - 1] = (*this)(j, this->columns() - 1);
-
-                        } else {
-                            for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
-                                column[this->outer[i]] = this->values[i];
-                        }
-                    }
-
-                    if constexpr (O == Row) {
-                        if(!(this->compressed)) { // Full iteration on non-zero elements.
-                            for(const auto &[key, value]: this->elements) {
-                                if(key[1] == j)
-                                    column[key[0]] = value;
-                            }
-                        } else {
-                            for(std::size_t i = 0; i < this->inner.size() - 1; ++i) {
-                                for(std::size_t k = this->inner[i]; k < this->inner[i + 1]; ++k) {
-                                    if(this->outer[k] == j) {
-                                        column[i] = this->values[k];
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    return column;
-                }
-
                 // OPERATIONS.
 
                 /**
@@ -463,8 +366,6 @@ namespace pacs {
 
                     std::vector<T> result;
                     result.resize(this->rows(), static_cast<T>(0));
-
-                    // Adapted from the .row() and .column() methods.
 
                     // Standard Row x Column product.
                     if constexpr (O == Row) {
@@ -518,8 +419,6 @@ namespace pacs {
 
                     std::vector<T> result;
                     result.resize(matrix.columns(), static_cast<T>(0));
-
-                    // Adapted from the .row() and .column() methods.
 
                     // Standard Row x Column product.
                     if constexpr (O == Column) {
@@ -774,37 +673,70 @@ namespace pacs {
                  */
                 template<Norm N = Frobenius>
                 double norm() const {
+                    #ifdef PARALLEL_PACS
+                        auto absolute = [](const double &x) { return std::abs(x); };
+                    #endif
+
                     double norm = 0.0, max = 0.0;
 
+                    // On the secondary direction.
                     if constexpr (N == One) {
 
-                        for(std::size_t j = 0; j < this->columns(); ++j) {
-                            double sum = 0.0;
-                            std::vector<T> column = this->column(j);
+                        if(!(this->compressed)) {
 
-                            for(const auto &value: column) // Inefficient.
-                                sum += std::abs(value);
+                            std::vector<double> sums;
+                            sums.resize(this->second, 0.0);
 
-                            max = sum > max ? sum : max;
+                            for(const auto &[key, value]: this->elements)
+                                sums[key[1]] += std::abs(value);
+
+                            norm = std::ranges::max(sums);
+
+                        } else {
+
+                            std::vector<double> sums;
+                            sums.resize(this->second, 0.0);
+
+                            for(std::size_t j = 0; j < this->values.size(); ++j)
+                                sums[this->outer[j]] += std::abs(this->values[j]);
+
+                            norm = std::ranges::max(sums);
+
                         }
-
-                        norm = max;
 
                     }
 
+                    // On the primary direction.
                     if constexpr (N == Infinity) {
 
-                        for(std::size_t j = 0; j < this->rows(); ++j) {
-                            double sum = 0.0;
-                            std::vector<T> row = this->row(j);
+                        if(!(this->compressed)) {
 
-                            for(const auto &value: row) // Inefficient.
-                                sum += std::abs(value);
+                            std::vector<double> sums;
+                            sums.resize(this->first, 0.0);
 
-                            max = sum > max ? sum : max;
+                            for(const auto &[key, value]: this->elements)
+                                sums[key[0]] += std::abs(value);
+
+                            norm = std::ranges::max(sums);
+
+                        } else {
+
+                            for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
+                                #ifdef PARALLEL_PACS
+                                    double sum = std::transform_reduce(std::execution::par, this->values.begin() + this->inner[j], this->values.begin() + this->inner[j + 1], 0.0, std::plus{}, absolute);
+                                #else
+                                    double sum = 0.0;
+
+                                    for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                                        sum += this->values[k];
+                                #endif
+
+                                max = sum > max ? sum : max;
+                            }
+
+                            norm = max;
+
                         }
-
-                        norm = max;
 
                     }
 
@@ -813,12 +745,20 @@ namespace pacs {
                         if(!(this->compressed)) {
                             for(const auto &[key, value]: this->elements)
                                 norm += static_cast<double>(std::abs(value) * std::abs(value));
-                        } else {
-                            for(const auto &value: this->values)
-                                norm += static_cast<double>(std::abs(value) * std::abs(value));
-                        }
 
-                        norm = std::sqrt(norm);
+                            norm = std::sqrt(norm);
+                        } else {
+
+                            #ifdef PARALLEL_PACS
+                                norm = std::sqrt(std::transform_reduce(std::execution::par, this->values.begin(), this->values.end(), 0.0, std::plus{}, absolute));
+                            #else
+                                for(const auto &value: this->values)
+                                    norm += static_cast<double>(std::abs(value) * std::abs(value));
+                                
+                                norm = std::sqrt(norm);
+                            #endif
+
+                        }
 
                     }
 
