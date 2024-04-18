@@ -97,8 +97,6 @@ To begin, clone the repository from [here](https://github.com/diantonioandrea/pa
 
 ### Compilation and Execution
 
-:warning: Ensure the `PACS_ROOT` variable is set to `/path/to/pacs-examples/Examples`, the `tbb` module is loaded and `LD_LIBRARY_PATH` includes `${PACS_ROOT}/lib`.
-
 Compile the code:
 
     make
@@ -107,13 +105,23 @@ Execute the code:
 
     ./main
 
-Furthermore, the executable could potentially be accelerated by removing the comment from the following line in the [Makefile](./Makefile)[^1]:
+Furthermore, the executable could potentially be accelerated by removing the comment from the following line in the same [Makefile](./Makefile)[^1]:
 
 [^1]: This ignores some safety and integrity checks.
 
 ``` make
 # CXXFLAGS += -DNDEBUG
 ```
+
+and parallel computing can be enabled by removing the comment from the following lines as well[^2]:
+
+``` make
+# CXXFLAGS += -DPARALLEL_PACS
+# LDFLAGS += -L$(mkTbbLib)
+# LDLIBS += -ltbb
+```
+
+[^2]: :warning: Ensure the `tbb` module is loaded.
 
 ## A note on `Matrix<T, O> * Matrix<T, O>`
 

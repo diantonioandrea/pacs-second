@@ -1,13 +1,18 @@
 .PHONY: all clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
-# Optimization.
+# Extras.
+CPPFLAGS = -I$(PACS_ROOT)/include
+LDFLAGS = -L$(PACS_ROOT)/lib
+LDLIBS = -lpacs
+
+# Optimizations.
+
 # CXXFLAGS += -DNDEBUG
 
-# Extras.
-CPPFLAGS = # -I$(PACS_ROOT)/include
-LDFLAGS = # -L$(PACS_ROOT)/lib
-LDLIBS = # -lpacs
+# CXXFLAGS += -DPARALLEL_PACS
+# LDFLAGS += -L$(mkTbbLib)
+# LDLIBS += -ltbb
 
 EXEC = main
 SOURCE = main.cpp
