@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
     // Tests.
 
-    // Vector product.
+    // Vector products.
 
     // Uncompressed row-first matrix.
     algebra::timer(row_matrix, vector);
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
     column_matrix.compress();
     algebra::timer(column_matrix, vector);
 
-    // Matrix product.
+    // Matrix products.
     
     row_matrix.uncompress();
     column_matrix.uncompress();
