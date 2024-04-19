@@ -32,7 +32,7 @@
 
 // Zero tolerance.
 #ifndef TOLERANCE_PACS
-#define TOLERANCE_PACS 1E-8
+#define TOLERANCE_PACS 1E-10
 #endif
 
 namespace pacs {
