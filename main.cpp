@@ -26,10 +26,15 @@ int main(int argc, char **argv) {
     algebra::Matrix<double> row_matrix = algebra::market<double>("data/matrix.mtx");
     algebra::Matrix<double, algebra::Column> column_matrix = algebra::market<double, algebra::Column>("data/matrix.mtx");
 
+    algebra::Matrix<double> row_matrix_1 = row_matrix;
+    algebra::Matrix<double, algebra::Column> column_matrix_1 = column_matrix;
+
     std::vector<double> vector;
     vector.resize(row_matrix.rows(), 1.0);
 
     // Tests.
+
+    // Vector product.
 
     // Uncompressed row-first matrix.
     algebra::timer(row_matrix, vector);
@@ -45,6 +50,34 @@ int main(int argc, char **argv) {
     // Compressed column-first matrix.
     column_matrix.compress();
     algebra::timer(column_matrix, vector);
+
+    // Matrix product.
+    
+    row_matrix.uncompress();
+    column_matrix.uncompress();
+
+    // Uncompressed row-first x uncompressed row-first.
+    algebra::timer(row_matrix, row_matrix_1);
+    
+    // Uncompressed row-first x compressed row-first.
+    row_matrix_1.compress();
+    algebra::timer(row_matrix, row_matrix_1);
+
+    // compressed row-first x compressed row-first.
+    row_matrix.compress();
+    algebra::timer(row_matrix, row_matrix_1);
+
+    // Uncompressed column-first x uncompressed column-first.
+    algebra::timer(column_matrix, column_matrix_1);
+    
+    // Uncompressed column-first x compressed column-first.
+    column_matrix_1.compress();
+    algebra::timer(column_matrix, column_matrix_1);
+
+    // compressed column-first x compressed column-first.
+    column_matrix.compress();
+    algebra::timer(column_matrix, column_matrix_1);
+    
 
     return 0;
 }
