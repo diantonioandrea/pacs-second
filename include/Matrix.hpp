@@ -61,7 +61,7 @@ namespace pacs {
         class Matrix {
             private:
 
-                // Size (Rows x Columns or Columns x Rows).
+                // Size (Rows by Columns or Columns by Rows).
                 const std::size_t first; // First dimension.
                 const std::size_t second; // Second dimension.
 
