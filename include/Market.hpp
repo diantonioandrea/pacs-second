@@ -51,10 +51,11 @@ namespace pacs {
             if(!(file))
                 std::cerr << "Could not load a Matrix [" << filename << "]" << std::endl;
 
-            // Matrix size.
-            std::getline(file, line); // Useless info.
-            std::getline(file, line); // Matrix dimension.
+            // Skipping the first lines (comments).
+            do { std::getline(file, line); } while(std::strcmp(&line[0], "%") == 0);
 
+            // Matrix size.
+            std::getline(file, line); // Matrix dimension.
             std::stringstream size{line}; // Matrix size.
             size >> rows >> columns;
 
