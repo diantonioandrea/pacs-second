@@ -173,6 +173,54 @@ namespace pacs {
                     return *this;
                 }
 
+                // CONVERSION.
+
+                /**
+                 * @brief Converts a row or column Matrix to a Vector.
+                 * 
+                 * @return std::vector<T> 
+                 */
+                operator std::vector<T>() const {
+                    #ifndef NDEBUG
+                    assert((this->first == 1) || (this->second == 1));
+                    #endif
+
+                    std::vector<T> vector;
+                    vector.resize(this->first * this->second, static_cast<T>(0));
+
+                    if(!(this->compressed)) {
+                        if(this->first == 1) {
+
+                            for(const auto &[key, value]: this->elements)
+                                vector[key[1]] = value;
+                            
+                        } else {
+
+                            for(const auto &[key, value]: this->elements)
+                                vector[key[0]] = value;
+
+                        }
+                    } else {
+                        if(this->first == 1) {
+
+                            for(std::size_t j = 0; j < this->inner.size(); ++j) {
+                                for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                                    vector[this->outer[k]] = this->values[k];
+                            }
+
+                        } else {
+
+                            for(std::size_t j = 0; j < this->inner.size(); ++j) {
+                                for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                                    vector[j] = this->values[k];
+                            }
+
+                        }
+                    }
+
+                    return vector;
+                }
+
                 // CALL OPERATORS.
 
                 /**
