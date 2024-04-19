@@ -85,10 +85,8 @@ namespace pacs {
         void tester(const Matrix<T, O> &first, const Matrix<T, O> &second, const std::size_t &tests = 1E3) {
             std::cout << "\nTesting for Matrix x Vector product." << std::endl;
 
-            // Tests.
+            // Test.
             auto start = std::chrono::high_resolution_clock::now();
-
-            std::cout << "- Testing Matrix x Matrix." << std::endl;
 
             for(std::size_t j = 0; j < tests; ++j)
                 first * second;
