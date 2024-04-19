@@ -107,7 +107,7 @@ Execute the code:
 
     ./main
 
-:warning: It is advised to redirect the output to a file due to its length by:
+:warning: It is advised to redirect the output to a file due to its length by executing the code with:
 
     make run
 
