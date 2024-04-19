@@ -1,5 +1,5 @@
 /**
- * @file Timer.hpp
+ * @file Tester.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
  * @date 2024-04-15
@@ -8,8 +8,8 @@
  * 
  */
 
-#ifndef TIMER_PACS
-#define TIMER_PACS
+#ifndef TESTER_PACS
+#define TESTER_PACS
 
 // Type.
 #include <Type.hpp>
@@ -36,7 +36,7 @@ namespace pacs {
          * @param vector 
          */
         template<MatrixType T, Order O>
-        void timer(const Matrix<T, O> &matrix, const std::vector<T> &vector, const std::size_t &tests = 5E5) {
+        void tester(const Matrix<T, O> &matrix, const std::vector<T> &vector, const std::size_t &tests = 5E5) {
             std::cout << "\nTesting for Matrix x Vector product." << std::endl;
             std::size_t products = 0;
 
@@ -82,7 +82,7 @@ namespace pacs {
          * @param vector 
          */
         template<MatrixType T, Order O>
-        void timer(const Matrix<T, O> &first, const Matrix<T, O> &second, const std::size_t &tests = 1E3) {
+        void tester(const Matrix<T, O> &first, const Matrix<T, O> &second, const std::size_t &tests = 1E3) {
             std::cout << "\nTesting for Matrix x Vector product." << std::endl;
 
             // Tests.

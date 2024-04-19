@@ -85,7 +85,7 @@ Key components include:
     - `Type.hpp`: Definition for the custom Matrix' type'.
     - `Matrix.hpp`: Definition for the Matrix class.
     - `Market.hpp`: Definition for the market loader function.
-    - `Timer.hpp`: Definition for the timer function.
+    - `Tester.hpp`: Definition for the tester function.
 
 ## Setup
 

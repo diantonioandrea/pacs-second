@@ -41,19 +41,19 @@ int main(int argc, char **argv) {
     // Vector products.
 
     // Uncompressed row-first matrix.
-    algebra::timer(row_matrix, vector);
+    algebra::tester(row_matrix, vector);
 
     // Compressed row-first matrix.
     // This should be the fastest.
     row_matrix.compress();
-    algebra::timer(row_matrix, vector);
+    algebra::tester(row_matrix, vector);
 
     // Uncompressed column-first matrix.
-    algebra::timer(column_matrix, vector);
+    algebra::tester(column_matrix, vector);
 
     // Compressed column-first matrix.
     column_matrix.compress();
-    algebra::timer(column_matrix, vector);
+    algebra::tester(column_matrix, vector);
 
     // Matrix products.
     
@@ -61,26 +61,32 @@ int main(int argc, char **argv) {
     column_matrix.uncompress();
 
     // Uncompressed row-first x uncompressed row-first.
-    algebra::timer(row_matrix, row_matrix_1);
+    algebra::tester(row_matrix, row_matrix_1);
     
     // Uncompressed row-first x compressed row-first.
     row_matrix_1.compress();
-    algebra::timer(row_matrix, row_matrix_1);
+    algebra::tester(row_matrix, row_matrix_1);
+
+    // Compressed row-first x uncompressed row-first.
+    algebra::tester(row_matrix_1, row_matrix);
 
     // compressed row-first x compressed row-first.
     row_matrix.compress();
-    algebra::timer(row_matrix, row_matrix_1);
+    algebra::tester(row_matrix, row_matrix_1);
 
     // Uncompressed column-first x uncompressed column-first.
-    algebra::timer(column_matrix, column_matrix_1);
+    algebra::tester(column_matrix, column_matrix_1);
     
     // Uncompressed column-first x compressed column-first.
     column_matrix_1.compress();
-    algebra::timer(column_matrix, column_matrix_1);
+    algebra::tester(column_matrix, column_matrix_1);
+
+    // Compressed column-first x uncompressed column-first.
+    algebra::tester(column_matrix_1, column_matrix);
 
     // compressed column-first x compressed column-first.
     column_matrix.compress();
-    algebra::timer(column_matrix, column_matrix_1);
+    algebra::tester(column_matrix, column_matrix_1);
     
     return 0;
 }
