@@ -410,6 +410,72 @@ namespace pacs {
                 // OPERATIONS.
 
                 /**
+                 * @brief Returns the product of Matrix x Scalar.
+                 * 
+                 * @tparam MT 
+                 * @param scalar 
+                 * @return Matrix 
+                 */
+                template<MatrixType MT>
+                Matrix operator *(const MT &scalar) const {
+                    Matrix result = *this;
+
+                    if(!(result.compressed)) {
+                        for(const auto &[key, value]: result.elements)
+                            result.elements[key] *= scalar;
+                    } else {
+                        for(auto &value: result.values)
+                            value *= scalar;
+                    }
+
+                    return result;
+                }
+
+                template<MatrixType MT>
+                Matrix &operator *=(const MT &scalar) {
+                    return *this = *this * scalar;
+                }
+
+                /**
+                 * @brief Returns the division of Matrix x Scalar.
+                 * 
+                 * @tparam MT 
+                 * @param scalar 
+                 * @return Matrix 
+                 */
+                template<MatrixType MT>
+                Matrix operator /(const MT &scalar) const {
+                    Matrix result = *this;
+
+                    if(!(result.compressed)) {
+                        for(const auto &[key, value]: result.elements)
+                            result.elements[key] /= scalar;
+                    } else {
+                        for(auto &value: result.values)
+                            value /= scalar;
+                    }
+
+                    return result;
+                }
+                
+                template<MatrixType MT>
+                Matrix &operator /=(const MT &scalar) {
+                    return *this = *this / scalar;
+                }
+
+                /**
+                 * @brief Returns the product of Scalar x Matrix.
+                 * 
+                 * @tparam MT 
+                 * @param scalar 
+                 * @return Matrix 
+                 */
+                template<MatrixType MT>
+                friend Matrix operator *(const MT &scalar, const Matrix &matrix) {
+                    return matrix * scalar;
+                }
+
+                /**
                  * @brief Returns the product of Matrix x Vector.
                  *
                  * @param vector
