@@ -305,29 +305,17 @@ namespace pacs {
                 }
 
                 /**
-                 * @brief Returns a reshaped matrix in the same (un)compressed state.
-                 *
-                 * @param first
-                 * @param second
-                 * @return Matrix
+                 * @brief Returns the reshaped matrix.
+                 * 
+                 * @param first 
+                 * @param second 
+                 * @return Matrix 
                  */
-                Matrix reshape(const std::size_t &first, const std::size_t &second, const bool &compress = false) const {
-                    if(!(this->compressed)) {
-                        Matrix matrix{first, second, this->elements};
+                Matrix reshape(const std::size_t &first, const std::size_t &second) const {
+                    if(!(this->compressed))
+                        return Matrix{first, second, this->elements};
 
-                        if(compress)
-                            matrix.compress();
-
-                        return matrix;
-                    }
-
-                    Matrix matrix{first, second, this->inner, this->outer, this->values};
-
-                    if(compress)
-                        return matrix;
-
-                    matrix.uncompress();
-                    return matrix;
+                    return Matrix{first, second, this->inner, this->outer, this->values};
                 }
 
                 // COMPRESSION.
