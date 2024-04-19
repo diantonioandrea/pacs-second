@@ -14,14 +14,14 @@
 // Type.
 #include <Type.hpp>
 
+// Matrix.
+#include <Matrix.hpp>
+
 // Containers.
 #include <vector>
 
 // Chrono.
 #include <chrono>
-
-// Matrix.
-#include <Matrix.hpp>
 
 namespace pacs {
 

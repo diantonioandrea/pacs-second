@@ -11,6 +11,9 @@
 #ifndef MAIN_PACS
 #define MAIN_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Matrices.
 #include <Matrix.hpp>
 
