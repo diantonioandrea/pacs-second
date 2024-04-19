@@ -105,11 +105,11 @@ namespace pacs {
                 std::cerr << "Could not dump the Matrix [" << filename << "]" << std::endl;
 
             file << "%% Dumped matrix.\n";
+            file << matrix.rows() << " " << matrix.columns() << " " << matrix.size() << "\n";
 
             if(!(matrix.is_compressed())) {
 
                 std::map<std::array<std::size_t, 2>, T> elements = matrix.get_elements();
-                file << matrix.rows() << " " << matrix.columns() << " " << elements.size() << "\n";
 
                 for(const auto &[key, value]: elements) {
                     if constexpr (O == Row)
@@ -124,7 +124,6 @@ namespace pacs {
                 std::vector<size_t> inner = matrix.get_inner();
                 std::vector<size_t> outer = matrix.get_outer();
                 std::vector<T> values = matrix.get_values();
-                file << matrix.rows() << " " << matrix.columns() << " " << values.size() << "\n";
 
                 for(std::size_t j = 0; j < inner.size() - 1; ++j) {
                     for(std::size_t k = inner[j]; k < inner[j + 1]; ++k) {

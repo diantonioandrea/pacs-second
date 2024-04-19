@@ -952,15 +952,24 @@ namespace pacs {
                 // METHODS.
 
                 /**
+                 * @brief Returns the number of non zero elements.
+                 * 
+                 * @return std::size_t 
+                 */
+                inline std::size_t size() const {
+                    if(!(this->compressed))
+                        return this->elements.size();
+
+                    return this->values.size();
+                }
+
+                /**
                  * @brief Returns the 'sparsity' of the Matrix.
                  *
                  * @return double
                  */
                 inline double sparsity() const {
-                    if(!(this->compressed))
-                        return static_cast<double>(this->elements.size()) / static_cast<double>(this->first * this->second);
-
-                    return static_cast<double>(this->values.size()) / static_cast<double>(this->first * this->second);
+                    return static_cast<double>(this->size()) / static_cast<double>(this->first * this->second);
                 }
 
                 /**
