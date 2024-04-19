@@ -122,4 +122,4 @@ and parallel computing can be enabled by removing, as needed, the comments' `#`s
 # LDLIBS += -ltbb
 ```
 
-[^2]: :warning: Ensure the `tbb` module is loaded if needed.
+[^2]: Ensure the `tbb` module is loaded if needed.
