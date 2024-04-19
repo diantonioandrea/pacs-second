@@ -11,6 +11,9 @@
 #ifndef MATRIX_PACS
 #define MATRIX_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Containers.
 #include <vector>
 #include <array>
@@ -21,10 +24,6 @@
 
 // Assertions.
 #include <cassert>
-
-// Math.
-#include <complex>
-#include <cmath>
 
 // Algorithms.
 #include <algorithm>
@@ -58,7 +57,7 @@ namespace pacs {
          * @tparam T Matrix' type.
          * @tparam O Matrix' ordering.
          */
-        template<typename T, Order O = Row>
+        template<MatrixType T, Order O = Row>
         class Matrix {
             private:
 
@@ -301,7 +300,7 @@ namespace pacs {
                         for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.lower_bound(next))).first; ++it) {
                             auto [key, value] = (*it);
 
-                            #ifndef NDEBUG // std::abs : T -> floating_point must be defined for this to work.
+                            #ifndef NDEBUG
                                 if(std::abs(value) > TOLERANCE_PACS) {
                                     this->outer.emplace_back(key[1]);
                                     this->values.emplace_back(value);
@@ -334,7 +333,7 @@ namespace pacs {
                     // Uncompression.
                     for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k) {
-                            #ifndef NDEBUG // std::abs : T -> floating_point must be defined for this to work.
+                            #ifndef NDEBUG
                                 if(std::abs(this->values[k]) > TOLERANCE_PACS) {
                                     this->elements[{j, this->outer[k]}] = this->values[k];
                                 }

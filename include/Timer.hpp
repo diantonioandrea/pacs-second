@@ -11,6 +11,9 @@
 #ifndef TIMER_PACS
 #define TIMER_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Containers.
 #include <vector>
 
@@ -32,7 +35,7 @@ namespace pacs {
          * @param matrix 
          * @param vector 
          */
-        template<typename T, Order O>
+        template<MatrixType T, Order O>
         void timer(const Matrix<T, O> &matrix, const std::vector<T> &vector, const std::size_t &tests = 5E5) {
             std::cout << "\nTesting for Matrix x Vector product." << std::endl;
             std::size_t products = 0;
@@ -78,7 +81,7 @@ namespace pacs {
          * @param matrix 
          * @param vector 
          */
-        template<typename T, Order O>
+        template<MatrixType T, Order O>
         void timer(const Matrix<T, O> &first, const Matrix<T, O> &second, const std::size_t &tests = 1E3) {
             std::cout << "\nTesting for Matrix x Vector product." << std::endl;
 
