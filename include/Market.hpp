@@ -11,6 +11,9 @@
 #ifndef MARKET_PACS
 #define MARKET_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Filename.
 #include <string>
 
@@ -35,7 +38,7 @@ namespace pacs {
          * @param verbose 
          * @return Matrix<T, O> 
          */
-        template<typename T, Order O = Row>
+        template<MatrixType T, Order O = Row>
         Matrix<T, O> market(const std::string &filename, const bool &verbose = false) {
             std::map<std::array<std::size_t, 2>, double> elements;
             std::size_t rows, columns;
