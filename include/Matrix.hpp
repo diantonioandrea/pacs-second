@@ -500,7 +500,7 @@ namespace pacs {
 
                                     // Updates elements.
                                     for(std::size_t h = 0; h < product.size(); ++h) {
-                                        if(std::abs(product[h]) > TOLERANCE_PACS)
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
                                             elements[{j, h}] = product[h];
                                     }
                                 }
@@ -527,7 +527,7 @@ namespace pacs {
 
                                     // Updates elements.
                                     for(std::size_t h = 0; h < product.size(); ++h) {
-                                        if(std::abs(product[h]) > TOLERANCE_PACS)
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
                                             elements[{j, h}] = product[h];
                                     }
                                 }
@@ -543,8 +543,12 @@ namespace pacs {
                                     std::vector<T> row;
                                     row.resize(matrix.columns(), static_cast<T>(0));
 
-                                    for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*(this->elements.lower_bound({j + 1, 0}))).first; ++it)
+                                    for(auto it = this->elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         row[(*it).first[1]] = (*it).second;
+
+                                        if((*it).first == (*(--this->elements.end())).first) // May cause overhead.
+                                            break;
+                                    }
 
                                     // Result's row.
                                     std::vector<T> product;
@@ -559,52 +563,26 @@ namespace pacs {
 
                                     // Updates elements.
                                     for(std::size_t h = 0; h < product.size(); ++h) {
-                                        if(std::abs(product[h]) > TOLERANCE_PACS)
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
                                             elements[{j, h}] = product[h];
                                     }
-                                }
-
-                                // Last row.
-                                std::size_t j = this->rows() - 1;
-
-                                // Row extraction from this.
-                                std::vector<T> row;
-                                row.resize(matrix.columns(), static_cast<T>(0));
-
-                                for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*(--this->elements.end())).first; ++it)
-                                    row[(*it).first[1]] = (*it).second;
-
-                                if(this->elements.contains({j, this->columns() - 1}))
-                                    row[this->columns() - 1] = this->elements[{j, this->columns() - 1}];
-
-                                // Result's row.
-                                std::vector<T> product;
-                                product.resize(this->columns(), static_cast<T>(0));
-
-                                // Linear combination of matrix' rows.
-                                for(std::size_t k = 0; k < matrix.rows(); ++k) { // k-th row of matrix.
-                                    for(std::size_t h = matrix.inner[k]; h < matrix.inner[k + 1]; ++h) {
-                                        product[matrix.outer[h]] += row[k] * matrix.values[h];
-                                    }
-                                }
-
-                                // Updates elements.
-                                for(std::size_t h = 0; h < product.size(); ++h) {
-                                    if(std::abs(product[h]) > TOLERANCE_PACS)
-                                        elements[{j, h}] = product[h];
                                 }
 
                             } else {
 
                                 // Iteration through this' rows.
-                                for(std::size_t j = 0; j < this->rows() - 1; ++j) { // j-th row of this.
+                                for(std::size_t j = 0; j < this->rows(); ++j) { // j-th row of this.
 
                                     // Row extraction from this.
                                     std::vector<T> row;
                                     row.resize(matrix.columns(), static_cast<T>(0));
 
-                                    for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*(this->elements.lower_bound({j + 1, 0}))).first; ++it)
+                                    for(auto it = this->elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         row[(*it).first[1]] = (*it).second;
+
+                                        if((*it).first == (*(--this->elements.end())).first) // May cause overhead.
+                                            break;
+                                    }
 
                                     // Result's row.
                                     std::vector<T> product;
@@ -616,37 +594,9 @@ namespace pacs {
 
                                     // Updates elements.
                                     for(std::size_t h = 0; h < product.size(); ++h) {
-                                        if(std::abs(product[h]) > TOLERANCE_PACS)
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
                                             elements[{j, h}] = product[h];
                                     }
-                                }
-
-                                // Last row.
-                                std::size_t j = this->rows() - 1;
-
-                                // Row extraction from this.
-                                std::vector<T> row;
-                                row.resize(matrix.columns(), static_cast<T>(0));
-
-                                for(auto it = this->elements.lower_bound({j, 0}); (*it).first < (*(--this->elements.end())).first; ++it)
-                                    row[(*it).first[1]] = (*it).second;
-
-                                // Last element.
-                                if(this->elements.contains({j, this->columns() - 1}))
-                                    row[this->columns() - 1] = this->elements[{j, this->columns() - 1}];
-
-                                // Result's row.
-                                std::vector<T> product;
-                                product.resize(this->columns(), static_cast<T>(0));
-
-                                // Full iteration on matrix' non-zero elements.
-                                for(const auto &[key, value]: matrix.elements)
-                                    product[key[1]] += row[key[0]] * value;
-
-                                // Updates elements.
-                                for(std::size_t h = 0; h < product.size(); ++h) {
-                                    if(std::abs(product[h]) > TOLERANCE_PACS)
-                                        elements[{j, h}] = product[h];
                                 }
 
                             }
@@ -656,7 +606,131 @@ namespace pacs {
 
                     if constexpr (O == Column) {
                         
-                        // WIP.
+                        if(this->compressed) {
+                            if(matrix.compressed) {
+
+                                // Iteration through matrix' columns.
+                                for(std::size_t j = 0; j < matrix.columns(); ++j) { // j-th column of matrix.
+
+                                    // Column extraction from matrix.
+                                    std::vector<T> column;
+                                    column.resize(matrix.rows(), static_cast<T>(0));
+
+                                    for(std::size_t k = matrix.inner[j]; k < matrix.inner[j + 1]; ++k)
+                                        column[matrix.outer[k]] = matrix.values[k];
+
+                                    // Result's column.
+                                    std::vector<T> product;
+                                    product.resize(this->rows(), static_cast<T>(0));                                    
+
+                                    for(std::size_t k = 0; k < this->columns(); ++k) { // k-th column of this.
+                                        for(std::size_t h = this->inner[k]; h < this->inner[k + 1]; ++h)
+                                            product[this->outer[h]] += column[k] * this->values[h];
+                                    }
+
+                                    // Updates elements.
+                                    for(std::size_t h = 0; h < product.size(); ++h) {
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
+                                            elements[{j, h}] = product[h];
+                                    }
+                                }
+
+                            } else {
+
+                                // Iteration through matrix' columns.
+                                for(std::size_t j = 0; j < matrix.columns(); ++j) { // j-th column of matrix.
+
+                                    // Column extraction from matrix.
+                                    std::vector<T> column;
+                                    column.resize(matrix.rows(), static_cast<T>(0));
+
+                                    for(auto it = matrix.elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
+                                        column[(*it).first[1]] = (*it).second;
+
+                                        if((*it).first == (*(--matrix.elements.end())).first) // May cause overhead.
+                                            break;
+                                    }
+
+                                    // Result's column.
+                                    std::vector<T> product;
+                                    product.resize(this->rows(), static_cast<T>(0));
+
+                                    // Linear combination of this' columns.
+                                    for(std::size_t k = 0; k < this->columns(); ++k) { // k-th column of this.
+                                        for(std::size_t h = this->inner[k]; h < this->inner[k + 1]; ++h) {
+                                            product[this->outer[h]] += column[k] * this->values[h];
+                                        }
+                                    }
+
+                                    // Updates elements.
+                                    for(std::size_t h = 0; h < product.size(); ++h) {
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
+                                            elements[{j, h}] = product[h];
+                                    }
+                                }
+
+                            }
+                        } else {
+                            if(matrix.compressed) {
+
+                                // Iteration through matrix' columns.
+                                for(std::size_t j = 0; j < matrix.columns(); ++j) { // j-th column of matrix.
+
+                                    // Column extraction from matrix.
+                                    std::vector<T> column;
+                                    column.resize(matrix.rows(), static_cast<T>(0));
+
+                                    for(std::size_t k = matrix.inner[j]; k < matrix.inner[j + 1]; ++k)
+                                        column[matrix.outer[k]] = matrix.values[k];
+
+                                    // Result's column.
+                                    std::vector<T> product;
+                                    product.resize(this->rows(), static_cast<T>(0));     
+
+                                    // Full iteration on this' non-zero elements.
+                                    for(const auto &[key, value]: this->elements)
+                                        product[key[0]] += column[key[1]] * value;
+
+                                    // Updates elements.
+                                    for(std::size_t h = 0; h < product.size(); ++h) {
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
+                                            elements[{j, h}] = product[h];
+                                    }
+                                }
+
+                            } else {
+
+                                // Iteration through matrix' columns.
+                                for(std::size_t j = 0; j < matrix.columns(); ++j) { // j-th column of matrix.
+
+                                    // Column extraction from matrix.
+                                    std::vector<T> column;
+                                    column.resize(matrix.rows(), static_cast<T>(0));
+
+                                    for(auto it = matrix.elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
+                                        column[(*it).first[1]] = (*it).second;
+
+                                        if((*it).first == (*(--matrix.elements.end())).first) // May cause overhead.
+                                            break;
+                                    }
+
+                                    // Result's column.
+                                    std::vector<T> product;
+                                    product.resize(this->rows(), static_cast<T>(0));     
+
+                                    // Full iteration on this' non-zero elements.
+                                    for(const auto &[key, value]: this->elements)
+                                        product[key[0]] += column[key[1]] * value;
+
+                                    // Updates elements.
+                                    for(std::size_t h = 0; h < product.size(); ++h) {
+                                        if(std::abs(product[h]) > TOLERANCE_PACS) // Check needed.
+                                            elements[{j, h}] = product[h];
+                                    }
+                                }
+                                
+                            }
+                        }
 
                     }
 
