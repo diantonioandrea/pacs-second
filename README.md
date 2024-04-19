@@ -32,7 +32,7 @@ Sparse matrices can be instantiated with any type `T`, and users can specify an 
 ```cpp
 namespace pacs {
     namespace algebra {
-        enum class Order { Row, Column };
+        enum class Order {Row, Column};
     }
 }
 ```
@@ -55,7 +55,7 @@ Moreover, these matrices have a template method `norm` which accepts, as a templ
 ```cpp
 namespace pacs {
     namespace algebra {
-        enum class Norm { One, Infinity, Frobenius };
+        enum class Norm {One, Infinity, Frobenius};
     }
 }
 ```
