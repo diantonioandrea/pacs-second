@@ -62,7 +62,7 @@ namespace pacs {
 
 and returns the corresponding matrix norm.
 
-A template function `market` is also present, which enables the user to load a matrix from a text file using the Matrix Market Format.
+A template function `market` is also present, which enables the user to load a matrix from a text file using the [Matrix Market Format](https://math.nist.gov/MatrixMarket/).
 
 ```cpp
 namespace pacs {
@@ -87,7 +87,7 @@ Key components include:
     - `Market.hpp`: Definition for the market loader function.
     - `Tester.hpp`: Definitions for the tester functions.
 - `data/`:
-    - `matrix.mtx`: An example test Matrix in [Matrix Market Format](https://math.nist.gov/MatrixMarket/).
+    - `matrix.mtx`: An example test Matrix.
 
 ## Setup
 
