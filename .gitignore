@@ -4,3 +4,6 @@
 # C++
 **/*.o
 main
+
+# Output
+output.txt

@@ -44,9 +44,8 @@ int main(int argc, char **argv) {
     algebra::tester(row_matrix, vector);
 
     // Compressed row-first matrix.
-    // This should be the fastest.
     row_matrix.compress();
-    algebra::tester(row_matrix, vector);
+    algebra::tester(row_matrix, vector); // This should be the fastest.
 
     // Uncompressed column-first matrix.
     algebra::tester(column_matrix, vector);

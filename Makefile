@@ -13,9 +13,14 @@ EXEC = main
 SOURCE = main.cpp
 OBJECT = main.o
 HEADERS = ./include/* # Recompiling purposes.
+OUTPUT = ./output.txt
 
 # Rules.
-all: $(EXEC)
+compile: $(EXEC)
+run:
+	@echo "Running the script and redirecting the output to $(OUTPUT)..."
+	@./$(EXEC) > $(OUTPUT)
+	@echo "Done!"
 
 $(EXEC): $(OBJECT)
 	$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
@@ -25,7 +30,8 @@ $(OBJECT): $(SOURCE) $(HEADERS)
 
 # Clean.
 clean:
-	$(RM) *.o
+	$(RM) $(OBJECT)
+	$(RM) $(OUTPUT)
 
 distclean: clean
 	$(RM) $(EXEC)

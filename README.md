@@ -107,7 +107,9 @@ Execute the code:
 
     ./main
 
-It is advised to redirect the output to a file due to its length.
+:warning: It is advised to redirect the output to a file due to its length by:
+
+    make run
 
 Furthermore, the executable could potentially be accelerated by removing the comment's `#` from the following line in the same [Makefile](./Makefile)[^1]:
 
