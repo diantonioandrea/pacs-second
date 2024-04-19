@@ -1022,6 +1022,44 @@ namespace pacs {
 
                     return ost;
                 }
+
+                // TRIVIAL GETTERS (market dumping).
+
+                /**
+                 * @brief Get the elements map.
+                 * 
+                 * @return std::map<std::array<std::size_t, 2>, T> 
+                 */
+                std::map<std::array<std::size_t, 2>, T> get_elements() const {
+                    return this->elements;
+                }
+
+                /**
+                 * @brief Get the inner vector.
+                 * 
+                 * @return std::vector<std::size_t> 
+                 */
+                std::vector<std::size_t> get_inner() const {
+                    return this->inner;
+                }
+                
+                /**
+                 * @brief Get the outer vector.
+                 * 
+                 * @return std::vector<std::size_t> 
+                 */
+                std::vector<std::size_t> get_outer() const {
+                    return this->outer;
+                }
+
+                /**
+                 * @brief Get the values vector.
+                 * 
+                 * @return std::vector<T> 
+                 */
+                std::vector<T> get_values() const {
+                    return this->values;
+                }
         };
 
     }

@@ -60,20 +60,23 @@ namespace pacs {
 }
 ```
 
-and returns the corresponding matrix norm.
+and returns **the corresponding matrix norm.**
 
-A template function `market` is also present, which enables the user to load a matrix from a text file using the [Matrix Market Format](https://math.nist.gov/MatrixMarket/).
+A template function `market` is also present, which enables the user to **dump and load a matrix to and from a text file** using the [Matrix Market Format](https://math.nist.gov/MatrixMarket/).
 
 ```cpp
 namespace pacs {
     namespace algebra {
         template<typename T, Order O>
         Matrix<T, O> market(const std::string &, const bool &);
+
+        template<typename T, Order O>
+        void market(const Matrix<T, O> &, const std::string &, const bool &);
     }
 }
 ```
 
-This method accepts the file path and an optional verbosity flag.
+It accepts the file path and an optional verbosity flag. The dumping method also accepts the matrix.
 
 ## Overview
 

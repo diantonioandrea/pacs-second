@@ -21,6 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 
 // Matrix.
 #include <Matrix.hpp>
@@ -84,6 +85,63 @@ namespace pacs {
                 std::cerr << "Loaded a " << rows << " by " << columns << ", " << elements.size() << " elements Matrix [" << filename << "]\n" << matrix << std::endl;
 
             return matrix;
+        }
+
+        /**
+         * @brief Dumps a Matrix to a market format file.
+         * 
+         * @tparam T 
+         * @tparam O 
+         * @param filename 
+         * @param verbose 
+         */
+        template<MatrixType T, Order O = Row>
+        void market(const Matrix<T, O> &matrix, const std::string &filename, const bool &verbose = false) {
+            // File loading.
+            std::ofstream file{filename};
+
+            if(!(file))
+                std::cerr << "Could not dump the Matrix [" << filename << "]" << std::endl;
+
+            file << "%% Dumped matrix.\n";
+
+            if(!(matrix.is_compressed())) {
+
+                std::map<std::array<std::size_t, 2>, T> elements = matrix.get_elements();
+                file << matrix.rows() << " " << matrix.columns() << " " << elements.size() << "\n";
+
+                for(const auto &[key, value]: elements) {
+                    if constexpr (O == Row)
+                        file << key[0] << " " << key[1] << " " << std::setprecision(12) << std::scientific << value << "\n";
+
+                    if constexpr (O == Column)
+                        file << key[1] << " " << key[0] << " " << std::setprecision(12) << std::scientific << value << "\n";
+                }
+
+            } else {
+                
+                std::vector<size_t> inner = matrix.get_inner();
+                std::vector<size_t> outer = matrix.get_outer();
+                std::vector<T> values = matrix.get_values();
+                file << matrix.rows() << " " << matrix.columns() << " " << values.size() << "\n";
+
+                for(std::size_t j = 0; j < inner.size() - 1; ++j) {
+                    for(std::size_t k = inner[j]; k < inner[j + 1]; ++k) {
+                        if constexpr (O == Row)
+                            file << j << " " << outer[k] << " " << std::setprecision(12) << std::scientific << values[k] << "\n";
+
+                        if constexpr (O == Column)
+                            file << outer[k] << " " << j << " " << std::setprecision(12) << std::scientific << values[k] << "\n";
+                    }
+                }
+
+            }
+
+            file.close();
+
+            if(verbose)
+                std::cerr << "Dumped a " << matrix.rows() << " by " << matrix.columns() << " Matrix [" << filename << "]\n" << std::endl;
+
         }
 
     }
