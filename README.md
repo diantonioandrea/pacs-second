@@ -104,6 +104,8 @@ Execute the code:
 
     ./main
 
+It is advised to redirect the output to a file due to its length.
+
 Furthermore, the executable could potentially be accelerated by removing the comment's `#` from the following line in the same [Makefile](./Makefile)[^1]:
 
 [^1]: This ignores some safety and integrity checks.
