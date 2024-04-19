@@ -86,7 +86,11 @@ namespace pacs {
                  * @param first
                  * @param second
                  */
-                Matrix(const std::size_t &first, const std::size_t &second): first{first}, second{second} {}
+                Matrix(const std::size_t &first, const std::size_t &second): first{first}, second{second} {
+                    #ifndef NDEBUG // Integrity check.
+                    assert((first > 0) && (second > 0));
+                    #endif
+                }
 
                 /**
                  * @brief Construct a new Matrix from a given std::map.
