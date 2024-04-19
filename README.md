@@ -85,7 +85,9 @@ Key components include:
     - `Type.hpp`: Definition for the custom Matrix' type'.
     - `Matrix.hpp`: Definition for the Matrix class.
     - `Market.hpp`: Definition for the market loader function.
-    - `Tester.hpp`: Definition for the tester function.
+    - `Tester.hpp`: Definitions for the tester functions.
+- `data/`:
+    - `matrix.mtx`: An example test Matrix in [Matrix Market Format](https://math.nist.gov/MatrixMarket/).
 
 ## Setup
 
