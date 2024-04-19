@@ -82,6 +82,7 @@ Key components include:
 - `main.cpp`: Core script serving as a testing suite.
 - `main.hpp`: Primary includes for `main.cpp`.
 - `include/`:
+    - `Type.hpp`: Definition for the custom Matrix' type'.
     - `Matrix.hpp`: Definition for the Matrix class.
     - `Market.hpp`: Definition for the market loader function.
     - `Timer.hpp`: Definition for the timer function.
