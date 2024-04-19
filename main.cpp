@@ -22,6 +22,10 @@ int main(int argc, char **argv) {
         std::cout << "Enabled parallel computing." << std::endl;
     #endif
 
+    #ifdef NDEBUG
+        std::cout << "Disabled debugging capabilities." << std::endl;
+    #endif
+
     // Test "subjects".
     algebra::Matrix<double> row_matrix = algebra::market<double>("data/matrix.mtx");
     algebra::Matrix<double, algebra::Column> column_matrix = algebra::market<double, algebra::Column>("data/matrix.mtx");
