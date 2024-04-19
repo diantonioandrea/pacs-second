@@ -404,12 +404,11 @@ namespace pacs {
                 /**
                  * @brief Returns the product of Matrix x Scalar.
                  * 
-                 * @tparam MT 
+                 * @tparam T 
                  * @param scalar 
                  * @return Matrix 
                  */
-                template<MatrixType MT>
-                Matrix operator *(const MT &scalar) const {
+                Matrix operator *(const T &scalar) const {
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
@@ -423,20 +422,18 @@ namespace pacs {
                     return result;
                 }
 
-                template<MatrixType MT>
-                Matrix &operator *=(const MT &scalar) {
+                Matrix &operator *=(const T &scalar) {
                     return *this = *this * scalar;
                 }
 
                 /**
                  * @brief Returns the division of Matrix x Scalar.
                  * 
-                 * @tparam MT 
+                 * @tparam T 
                  * @param scalar 
                  * @return Matrix 
                  */
-                template<MatrixType MT>
-                Matrix operator /(const MT &scalar) const {
+                Matrix operator /(const T &scalar) const {
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
@@ -450,20 +447,18 @@ namespace pacs {
                     return result;
                 }
                 
-                template<MatrixType MT>
-                Matrix &operator /=(const MT &scalar) {
+                Matrix &operator /=(const T &scalar) {
                     return *this = *this / scalar;
                 }
 
                 /**
                  * @brief Returns the product of Scalar x Matrix.
                  * 
-                 * @tparam MT 
+                 * @tparam T 
                  * @param scalar 
                  * @return Matrix 
                  */
-                template<MatrixType MT>
-                friend Matrix operator *(const MT &scalar, const Matrix &matrix) {
+                friend Matrix operator *(const T &scalar, const Matrix &matrix) {
                     return matrix * scalar;
                 }
 
