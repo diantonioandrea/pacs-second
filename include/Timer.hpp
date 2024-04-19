@@ -42,20 +42,24 @@ namespace pacs {
 
             // Matrix x Vector.
             if(matrix.columns() == vector.size()) {
-                std::cout << "- Testing Matrix x Vector." << std::endl;
+                std::cout << "- Testing Matrix x Vector, elapsed: ";
                 ++products;
 
                 for(std::size_t j = 0; j < tests; ++j)
                     matrix * vector;
+
+                std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
             }
 
             // Vector x Matrix.
             if(matrix.rows() == vector.size()) {
-                std::cout << "- Testing Vector x Matrix." << std::endl;
+                std::cout << "- Testing Vector x Matrix, elapsed: ";
                 ++products;
                 
                 for(std::size_t j = 0; j < tests; ++j)
                     vector * matrix;
+
+                std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
             }
 
             auto stop = std::chrono::high_resolution_clock::now();
