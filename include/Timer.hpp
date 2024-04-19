@@ -97,7 +97,7 @@ namespace pacs {
 
             // Results.
             std::cout << "\nTested " << tests << " products between a " << first.rows() << " by " << first.columns() << " sparse matrix and a " << second.rows() << " by " << second.columns() << " sparse matrix." << std::endl;
-            std::cout << "First one has a sparsity of " << first.sparsity() << "and it is " << (first.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
+            std::cout << "First one has a sparsity of " << first.sparsity() << " and it is " << (first.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
             std::cout << "Second one has a sparsity of " << second.sparsity() << " and it is " << (second.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
             std::cout << "Both matrices are " << (O == Row ? "row-first" : "column-first") << " ordered." << std::endl;
             std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1E6 << " second(s)." << std::endl;
