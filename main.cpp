@@ -78,6 +78,5 @@ int main(int argc, char **argv) {
     column_matrix.compress();
     algebra::timer(column_matrix, column_matrix_1);
     
-
     return 0;
 }
