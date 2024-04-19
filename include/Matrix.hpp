@@ -36,9 +36,6 @@
 #define TOLERANCE_PACS 1E-8
 #endif
 
-// Zero checks.
-#define ZCHECK_PACS
-
 namespace pacs {
 
     namespace algebra {
@@ -104,7 +101,8 @@ namespace pacs {
                     #ifndef NDEBUG // Integrity checks.
                     assert((first > 0) && (second > 0));
 
-                    // WIP.
+                    for(const auto &[key, value]: elements)
+                        assert((key[0] < first) && (key[1] < second));
 
                     #endif
                 }
@@ -121,7 +119,12 @@ namespace pacs {
                     #ifndef NDEBUG // Integrity checks.
                     assert((first > 0) && (second > 0));
 
-                    // WIP.
+                    assert(inner.size() == first + 1);
+                    for(std::size_t j = 1; j < outer.size(); ++j) {
+                        assert(outer[j - 1] < second);
+                        assert(outer[j] < second);
+                        assert(outer[j - 1] < outer[j]);
+                    }
 
                     #endif
                 }
@@ -152,15 +155,15 @@ namespace pacs {
                     assert((this->first == matrix.first) && (this->second == matrix.second));
                     #endif
 
+                    this->compressed = matrix.compressed;
+
                     if(!(matrix.compressed)) {
-                        this->compressed = false;
                         this->elements = matrix.elements;
 
                         this->inner.clear();
                         this->outer.clear();
                         this->values.clear();
                     } else {
-                        this->compressed = true;
                         this->elements.clear();
 
                         this->inner = matrix.inner;
@@ -298,7 +301,7 @@ namespace pacs {
                         for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.lower_bound(next))).first; ++it) {
                             auto [key, value] = (*it);
 
-                            #ifdef ZCHECK_PACS // std::abs : T -> floating_point must be defined for this to work.
+                            #ifndef NDEBUG // std::abs : T -> floating_point must be defined for this to work.
                                 if(std::abs(value) > TOLERANCE_PACS) {
                                     this->outer.emplace_back(key[1]);
                                     this->values.emplace_back(value);
@@ -331,7 +334,13 @@ namespace pacs {
                     // Uncompression.
                     for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k) {
-                            this->elements[{j, this->outer[k]}] = this->values[k];
+                            #ifndef NDEBUG // std::abs : T -> floating_point must be defined for this to work.
+                                if(std::abs(this->values[k]) > TOLERANCE_PACS) {
+                                    this->elements[{j, this->outer[k]}] = this->values[k];
+                                }
+                            #else
+                                this->elements[{j, this->outer[k]}] = this->values[k];
+                            #endif
                         }
                     }
 
