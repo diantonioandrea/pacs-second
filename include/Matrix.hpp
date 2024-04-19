@@ -193,33 +193,19 @@ namespace pacs {
                     vector.resize(this->first * this->second, static_cast<T>(0));
 
                     if(!(this->compressed)) {
-                        if(this->first == 1) {
 
-                            for(const auto &[key, value]: this->elements)
-                                vector[key[1]] = value;
-                            
-                        } else {
+                        // Either key[0] or key[1] is always zero.
+                        for(const auto &[key, value]: this->elements)
+                            vector[key[1]] = value;
 
-                            for(const auto &[key, value]: this->elements)
-                                vector[key[0]] = value;
-
-                        }
                     } else {
-                        if(this->first == 1) {
 
-                            for(std::size_t j = 0; j < this->inner.size(); ++j) {
-                                for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
-                                    vector[this->outer[k]] = this->values[k];
-                            }
-
-                        } else {
-
-                            for(std::size_t j = 0; j < this->inner.size(); ++j) {
-                                for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
-                                    vector[j] = this->values[k];
-                            }
-
+                        // Either j or outer[k] is always zero.
+                        for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
+                            for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                                vector[j + this->outer[k]] = this->values[k];
                         }
+
                     }
 
                     return vector;
