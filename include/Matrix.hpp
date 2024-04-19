@@ -387,7 +387,7 @@ namespace pacs {
 
                     if constexpr (O == Column) {
                         if(!(this->compressed)) { // Slower.
-                            
+
                             // Full iteration on non-zero elements.
                             for(const auto &[key, value]: this->elements)
                                 result[key[1]] += value * vector[key[0]];
@@ -460,23 +460,23 @@ namespace pacs {
 
                 /**
                  * @brief Returns the product of Matrix x Matrix (same ordering).
-                 * 
-                 * @param matrix 
-                 * @return Matrix 
+                 *
+                 * @param matrix
+                 * @return Matrix
                  */
                 Matrix operator *(const Matrix &matrix) const {
                     #ifndef NDEBUG
                     assert(this->columns() == matrix.rows());
                     #endif
-                    
+
                     // Result.
                     std::map<std::array<std::size_t, 2>, T> elements;
 
                     if constexpr (O == Row) {
-                        
+
                         if(this->compressed) {
                             if(matrix.compressed) {
-                                
+
                                 // Iteration through this' rows.
                                 for(std::size_t j = 0; j < this->rows(); ++j) { // j-th row of this.
 
@@ -535,7 +535,7 @@ namespace pacs {
                             }
                         } else {
                             if(matrix.compressed) {
-                                
+
                                 // Iteration through this' rows.
                                 for(std::size_t j = 0; j < this->rows() - 1; ++j) { // j-th row of this.
 
@@ -605,7 +605,7 @@ namespace pacs {
                     }
 
                     if constexpr (O == Column) {
-                        
+
                         if(this->compressed) {
                             if(matrix.compressed) {
 
@@ -621,7 +621,7 @@ namespace pacs {
 
                                     // Result's column.
                                     std::vector<T> product;
-                                    product.resize(this->rows(), static_cast<T>(0));                                    
+                                    product.resize(this->rows(), static_cast<T>(0));
 
                                     for(std::size_t k = 0; k < this->columns(); ++k) { // k-th column of this.
                                         for(std::size_t h = this->inner[k]; h < this->inner[k + 1]; ++h)
@@ -685,7 +685,7 @@ namespace pacs {
 
                                     // Result's column.
                                     std::vector<T> product;
-                                    product.resize(this->rows(), static_cast<T>(0));     
+                                    product.resize(this->rows(), static_cast<T>(0));
 
                                     // Full iteration on this' non-zero elements.
                                     for(const auto &[key, value]: this->elements)
@@ -716,7 +716,7 @@ namespace pacs {
 
                                     // Result's column.
                                     std::vector<T> product;
-                                    product.resize(this->rows(), static_cast<T>(0));     
+                                    product.resize(this->rows(), static_cast<T>(0));
 
                                     // Full iteration on this' non-zero elements.
                                     for(const auto &[key, value]: this->elements)
@@ -728,7 +728,7 @@ namespace pacs {
                                             elements[{j, h}] = product[h];
                                     }
                                 }
-                                
+
                             }
                         }
 
@@ -828,7 +828,7 @@ namespace pacs {
                             #else
                                 for(const auto &value: this->values)
                                     norm += static_cast<double>(std::abs(value) * std::abs(value));
-                                
+
                                 norm = std::sqrt(norm);
                             #endif
 
