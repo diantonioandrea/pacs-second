@@ -12,14 +12,15 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 EXEC = main
 SOURCE = main.cpp
 OBJECT = main.o
+HEADERS = ./include/* # Recompiling purposes.
 
 # Rules.
 all: $(EXEC)
 
 $(EXEC): $(OBJECT)
-	$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $(EXEC)
+	$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(OBJECT): $(SOURCE)
+$(OBJECT): $(SOURCE) $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Clean.
