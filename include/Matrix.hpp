@@ -757,6 +757,7 @@ namespace pacs {
                 double norm() const {
                     #ifdef PARALLEL_PACS
                         auto absolute = [](const double &x) { return std::abs(x); };
+                        auto absolute_squared = [](const double &x) { return std::abs(x) * std::abs(x); };
                     #endif
 
                     double norm = 0.0, max = 0.0;
@@ -832,7 +833,7 @@ namespace pacs {
                         } else {
 
                             #ifdef PARALLEL_PACS
-                                norm = std::sqrt(std::transform_reduce(std::execution::par, this->values.begin(), this->values.end(), 0.0, std::plus{}, absolute));
+                                norm = std::sqrt(std::transform_reduce(std::execution::par, this->values.begin(), this->values.end(), 0.0, std::plus{}, absolute_squared));
                             #else
                                 for(const auto &value: this->values)
                                     norm += static_cast<double>(std::abs(value) * std::abs(value));
