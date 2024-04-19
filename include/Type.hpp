@@ -51,7 +51,7 @@ namespace pacs {
          */
         template<typename T>
         concept Absolute = requires(T value) {
-            {std::abs(value)} -> std::floating_point;
+            {std::abs(value)} -> std::convertible_to<double>;
         };
 
         /**
