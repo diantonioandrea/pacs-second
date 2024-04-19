@@ -48,7 +48,7 @@ T &operator ()(const std::size_t &, const std::size_t &);
 
 with the latter only acting on uncompressed matrices.
 
-These matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matrix<T, O> * Matrix<T, O>` matrix row-column product.
+These matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matrix<T, O> * Matrix<T, O>` matrix product.
 
 Moreover, these matrices have a template method `norm` which accepts, as a template parameter, one of the followings:
 
