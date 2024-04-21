@@ -236,7 +236,7 @@ namespace pacs {
                     if(!(this->compressed))
                         return this->elements.contains({j, k}) ? this->elements[{j, k}] : static_cast<T>(0);
 
-                    // Looks for the value.
+                    // Looks for the value on compressed Matrix.
                     for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
                         if(k == this->outer[i])
                             return this->values[i];
@@ -247,18 +247,29 @@ namespace pacs {
                 }
 
                 /**
-                 * @brief Call operator, returns a reference to the (i, j)-th element on uncompressed Matrix.
+                 * @brief Call operator, returns a reference to the (i, j)-th element.
                  *
                  * @param j
                  * @param k
                  * @return T&
                  */
                 T &operator ()(const std::size_t &j, const std::size_t &k) {
-                    #ifndef NDEBUG // Out-of-bound and (un)compression check.
+                    #ifndef NDEBUG // Out-of-bound check.
                     assert((j < first) && (k < second));
-                    assert(!(this->compressed));
                     #endif
 
+                    // Immediate reference on uncompressed Matrix.
+                    if(!(this->compressed))
+                        return this->elements[{j, k}];
+
+                    // Looks for the value on compressed Matrix.
+                    for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
+                        if(k == this->outer[i])
+                            return this->values[i];
+                    }
+
+                    // Uncompresses and returns reference on missing value.
+                    this->uncompress();
                     return this->elements[{j, k}];
                 }
 
