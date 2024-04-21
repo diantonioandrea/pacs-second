@@ -36,6 +36,8 @@ int main(int argc, char **argv) {
     std::vector<double> vector;
     vector.resize(row_matrix.rows(), 1.0);
 
+    double scalar{1.0};
+
     // Tests.
 
     // Vector products.
@@ -86,6 +88,25 @@ int main(int argc, char **argv) {
     // compressed column-first x compressed column-first.
     column_matrix.compress();
     algebra::tester(column_matrix, column_matrix_1);
+
+    // Scalar products.
+
+    row_matrix.uncompress();
+    column_matrix.uncompress();
+
+    // Uncompressed row-first matrix.
+    algebra::tester(row_matrix, scalar);
+
+    // Compressed row-first matrix.
+    row_matrix.compress();
+    algebra::tester(row_matrix, scalar);
+
+    // Uncompressed column-first matrix.
+    algebra::tester(column_matrix, scalar);
+
+    // Compressed column-first matrix.
+    column_matrix.compress();
+    algebra::tester(column_matrix, scalar);
     
     return 0;
 }

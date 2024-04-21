@@ -83,7 +83,7 @@ namespace pacs {
          */
         template<MatrixType T, Order O>
         void tester(const Matrix<T, O> &first, const Matrix<T, O> &second, const std::size_t &tests = 1E3) {
-            std::cout << "\nTesting for Matrix x Vector product." << std::endl;
+            std::cout << "\nTesting for Matrix x Matrix product." << std::endl;
 
             // Test.
             auto start = std::chrono::high_resolution_clock::now();
@@ -98,6 +98,33 @@ namespace pacs {
             std::cout << "First one has a sparsity of " << first.sparsity() << " and it is " << (first.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
             std::cout << "Second one has a sparsity of " << second.sparsity() << " and it is " << (second.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
             std::cout << "Both matrices are " << (O == Row ? "row-first" : "column-first") << " ordered." << std::endl;
+            std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1E6 << " second(s)." << std::endl;
+        }
+
+        /**
+         * @brief Prints the time needed for an arbitrary number of Matrix x Scalar products, along with some other info.
+         * 
+         * @tparam T 
+         * @tparam O 
+         * @param matrix 
+         * @param scalar 
+         * @param tests 
+         */
+        template<MatrixType T, Order O>
+        void tester(const Matrix<T, O> &matrix, const T &scalar, const std::size_t &tests = 1E6) {
+            std::cout << "\nTesting for Matrix x Scalar product." << std::endl;
+
+            // Test.
+            auto start = std::chrono::high_resolution_clock::now();
+
+            for(std::size_t j = 0; j < tests; ++j)
+                matrix * scalar;
+
+            auto stop = std::chrono::high_resolution_clock::now();
+
+            // Results.
+            std::cout << "\nTested " << tests << " products between a " << matrix.rows() << " by " << matrix.columns() << " sparse matrix and a scalar." << std::endl;
+            std::cout << "Matrix has a sparsity of " << matrix.sparsity() << ", it is " << (O == Row ? "row-first" : "column-first") << " ordered and it is " << (matrix.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
             std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1E6 << " second(s)." << std::endl;
         }
 
