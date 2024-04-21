@@ -409,7 +409,7 @@ namespace pacs {
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
-                        for(const auto &[key, value]: result.elements)
+                        for(const auto &[key, value]: result.elements) // Extremely slow.
                             result.elements[key] *= scalar;
                     } else {
                         
@@ -443,7 +443,7 @@ namespace pacs {
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
-                        for(const auto &[key, value]: result.elements)
+                        for(const auto &[key, value]: result.elements) // Extremely slow.
                             result.elements[key] /= scalar;
                     } else {
                         

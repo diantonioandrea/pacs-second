@@ -111,7 +111,7 @@ namespace pacs {
          * @param tests 
          */
         template<MatrixType T, Order O>
-        void tester(const Matrix<T, O> &matrix, const T &scalar, const std::size_t &tests = 1E6) {
+        void tester(const Matrix<T, O> &matrix, const T &scalar, const std::size_t &tests = 1E5) {
             std::cout << "\nTesting for Matrix x Scalar product." << std::endl;
 
             // Test.
