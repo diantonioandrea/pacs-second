@@ -886,6 +886,7 @@ namespace pacs {
                     #ifdef PARALLEL_PACS
                         auto absolute = [](const double &x) { return std::abs(x); };
                         auto absolute_squared = [](const double &x) { return std::abs(x) * std::abs(x); };
+                        auto absolute_squared_map = [](auto &x) { return std::abs(x.second) * std::abs(x.second); };
                     #endif
 
                     double norm = 0.0, max = 0.0;
@@ -893,27 +894,22 @@ namespace pacs {
                     // On the secondary direction.
                     if constexpr (N == One) {
 
-                        if(!(this->compressed)) {
+                        std::vector<double> sums;
+                        sums.resize(this->second, 0.0);
 
-                            std::vector<double> sums;
-                            sums.resize(this->second, 0.0);
+                        if(!(this->compressed)) {
 
                             for(const auto &[key, value]: this->elements)
                                 sums[key[1]] += std::abs(value);
 
-                            norm = std::ranges::max(sums);
-
                         } else {
-
-                            std::vector<double> sums;
-                            sums.resize(this->second, 0.0);
-
+                            
                             for(std::size_t j = 0; j < this->values.size(); ++j)
                                 sums[this->outer[j]] += std::abs(this->values[j]);
 
-                            norm = std::ranges::max(sums);
-
                         }
+
+                        norm = std::ranges::max(sums);
 
                     }
 
@@ -955,10 +951,16 @@ namespace pacs {
                     if constexpr (N == Frobenius) {
 
                         if(!(this->compressed)) {
-                            for(const auto &[key, value]: this->elements)
-                                norm += static_cast<double>(std::abs(value) * std::abs(value));
 
-                            norm = std::sqrt(norm);
+                            #ifdef PARALLEL_PACS
+                                norm = std::sqrt(std::transform_reduce(std::execution::par, this->elements.begin(), this->elements.end(), 0.0, std::plus{}, absolute_squared_map));
+                            #else
+                                for(const auto &[key, value]: this->elements)
+                                    norm += static_cast<double>(std::abs(value) * std::abs(value));
+
+                                norm = std::sqrt(norm);
+                            #endif
+
                         } else {
 
                             #ifdef PARALLEL_PACS
