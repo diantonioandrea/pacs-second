@@ -395,14 +395,23 @@ namespace pacs {
                  * @return Matrix 
                  */
                 Matrix operator *(const T &scalar) const {
+                    #ifdef PARALLEL_PACS
+                    auto product = [scalar](T element){return element *= scalar;};
+                    #endif
+
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
                         for(const auto &[key, value]: result.elements)
                             result.elements[key] *= scalar;
                     } else {
-                        for(auto &value: result.values)
-                            value *= scalar;
+                        
+                        #ifdef PARALLEL_PACS
+                            std::ranges::transform(std::execution::par, result.values, product);
+                        #else
+                            for(auto &value: result.values)
+                                value *= scalar;
+                        #endif
                     }
 
                     return result;
@@ -420,14 +429,24 @@ namespace pacs {
                  * @return Matrix 
                  */
                 Matrix operator /(const T &scalar) const {
+                    #ifdef PARALLEL_PACS
+                    auto product = [scalar](T element){return element /= scalar;};
+                    #endif
+
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
                         for(const auto &[key, value]: result.elements)
                             result.elements[key] /= scalar;
                     } else {
-                        for(auto &value: result.values)
-                            value /= scalar;
+                        
+                        #ifdef PARALLEL_PACS
+                            std::ranges::transform(std::execution::par, result.values, product);
+                        #else
+                            for(auto &value: result.values)
+                                value /= scalar;
+                        #endif
+
                     }
 
                     return result;
