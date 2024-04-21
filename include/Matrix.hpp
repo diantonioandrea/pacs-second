@@ -403,7 +403,7 @@ namespace pacs {
                  */
                 Matrix operator *(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto product = [scalar](T element) {  return element *= scalar;};
+                    auto product = [scalar](T element) {  return element *= scalar; };
                     #endif
 
                     Matrix result = *this;
@@ -437,7 +437,7 @@ namespace pacs {
                  */
                 Matrix operator /(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto division = [scalar](T element) {  return element *= scalar;};
+                    auto division = [scalar](T element) {  return element *= scalar; };
                     #endif
 
                     Matrix result = *this;
