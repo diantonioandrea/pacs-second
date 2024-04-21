@@ -123,6 +123,13 @@ namespace pacs {
                     assert((first > 0) && (second > 0));
 
                     assert(inner.size() == first + 1);
+
+                    for(std::size_t j = 1; j < inner.size(); ++j) {
+                        assert(inner[j - 1] < values.size());
+                        assert(inner[j] < values.size());
+                        assert(inner[j - 1] <= inner[j]);
+                    }
+
                     for(std::size_t j = 1; j < outer.size(); ++j) {
                         assert(outer[j - 1] < second);
                         assert(outer[j] < second);
