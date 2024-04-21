@@ -403,7 +403,7 @@ namespace pacs {
                  */
                 Matrix operator *(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto product = [scalar](T element) {  return element *= scalar; };
+                    auto product = [scalar](T element) { return element *= scalar; };
                     #endif
 
                     Matrix result = *this;
@@ -413,8 +413,8 @@ namespace pacs {
                             result.elements[key] *= scalar;
                     } else {
                         
-                        #ifdef PARALLEL_PACS
-                            std::ranges::transform(std::execution::par, result.values, product);
+                        #ifdef PARALLEL_PACS // Actually faster.
+                            std::transform(std::execution::par, result.values.begin(), result.values.end(), result.values.begin(), product);
                         #else
                             for(auto &value: result.values)
                                 value *= scalar;
@@ -437,7 +437,7 @@ namespace pacs {
                  */
                 Matrix operator /(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto division = [scalar](T element) {  return element *= scalar; };
+                    auto division = [scalar](T element) { return element *= scalar; };
                     #endif
 
                     Matrix result = *this;
@@ -447,8 +447,8 @@ namespace pacs {
                             result.elements[key] /= scalar;
                     } else {
                         
-                        #ifdef PARALLEL_PACS
-                            std::ranges::transform(std::execution::par, result.values, division);
+                        #ifdef PARALLEL_PACS // Actually faster.
+                            std::transform(std::execution::par, result.values.begin(), result.values.end(), result.values.begin(), division);
                         #else
                             for(auto &value: result.values)
                                 value /= scalar;
