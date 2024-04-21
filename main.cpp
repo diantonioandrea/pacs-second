@@ -38,75 +38,89 @@ int main(int argc, char **argv) {
 
     double scalar{1.0};
 
-    // Tests.
+    // // Tests.
 
-    // Vector products.
+    // // Vector products.
 
-    // Uncompressed row-first matrix.
-    algebra::tester(row_matrix, vector);
+    // // Uncompressed row-first matrix.
+    // algebra::tester(row_matrix, vector);
 
-    // Compressed row-first matrix.
-    row_matrix.compress();
-    algebra::tester(row_matrix, vector); // This should be the fastest.
+    // // Compressed row-first matrix.
+    // row_matrix.compress();
+    // algebra::tester(row_matrix, vector); // This should be the fastest.
 
-    // Uncompressed column-first matrix.
-    algebra::tester(column_matrix, vector);
+    // // Uncompressed column-first matrix.
+    // algebra::tester(column_matrix, vector);
 
-    // Compressed column-first matrix.
-    column_matrix.compress();
-    algebra::tester(column_matrix, vector);
+    // // Compressed column-first matrix.
+    // column_matrix.compress();
+    // algebra::tester(column_matrix, vector);
 
-    // Matrix products.
+    // // Matrix products.
     
-    row_matrix.uncompress();
-    column_matrix.uncompress();
+    // row_matrix.uncompress();
+    // column_matrix.uncompress();
 
-    // Uncompressed row-first x uncompressed row-first.
-    algebra::tester(row_matrix, row_matrix_1);
+    // // Uncompressed row-first x uncompressed row-first.
+    // algebra::tester(row_matrix, row_matrix_1);
     
-    // Uncompressed row-first x compressed row-first.
-    row_matrix_1.compress();
-    algebra::tester(row_matrix, row_matrix_1);
+    // // Uncompressed row-first x compressed row-first.
+    // row_matrix_1.compress();
+    // algebra::tester(row_matrix, row_matrix_1);
 
-    // Compressed row-first x uncompressed row-first.
-    algebra::tester(row_matrix_1, row_matrix);
+    // // Compressed row-first x uncompressed row-first.
+    // algebra::tester(row_matrix_1, row_matrix);
 
-    // compressed row-first x compressed row-first.
-    row_matrix.compress();
-    algebra::tester(row_matrix, row_matrix_1);
+    // // compressed row-first x compressed row-first.
+    // row_matrix.compress();
+    // algebra::tester(row_matrix, row_matrix_1);
 
-    // Uncompressed column-first x uncompressed column-first.
-    algebra::tester(column_matrix, column_matrix_1);
+    // // Uncompressed column-first x uncompressed column-first.
+    // algebra::tester(column_matrix, column_matrix_1);
     
-    // Uncompressed column-first x compressed column-first.
-    column_matrix_1.compress();
-    algebra::tester(column_matrix, column_matrix_1);
+    // // Uncompressed column-first x compressed column-first.
+    // column_matrix_1.compress();
+    // algebra::tester(column_matrix, column_matrix_1);
 
-    // Compressed column-first x uncompressed column-first.
-    algebra::tester(column_matrix_1, column_matrix);
+    // // Compressed column-first x uncompressed column-first.
+    // algebra::tester(column_matrix_1, column_matrix);
 
-    // compressed column-first x compressed column-first.
-    column_matrix.compress();
-    algebra::tester(column_matrix, column_matrix_1);
+    // // compressed column-first x compressed column-first.
+    // column_matrix.compress();
+    // algebra::tester(column_matrix, column_matrix_1);
 
-    // Scalar products.
+    // // Scalar products.
 
-    row_matrix.uncompress();
-    column_matrix.uncompress();
+    // row_matrix.uncompress();
+    // column_matrix.uncompress();
 
-    // Uncompressed row-first matrix.
-    algebra::tester(row_matrix, scalar);
+    // // Uncompressed row-first matrix.
+    // algebra::tester(row_matrix, scalar);
 
-    // Compressed row-first matrix.
-    row_matrix.compress();
-    algebra::tester(row_matrix, scalar);
+    // // Compressed row-first matrix.
+    // row_matrix.compress();
+    // algebra::tester(row_matrix, scalar);
 
-    // Uncompressed column-first matrix.
-    algebra::tester(column_matrix, scalar);
+    // // Uncompressed column-first matrix.
+    // algebra::tester(column_matrix, scalar);
 
-    // Compressed column-first matrix.
-    column_matrix.compress();
-    algebra::tester(column_matrix, scalar);
+    // // Compressed column-first matrix.
+    // column_matrix.compress();
+    // algebra::tester(column_matrix, scalar);
+
+    std::map<std::array<std::size_t, 2>, int> elements;
+
+    elements[{0, 0}] = 1;
+    elements[{1, 1}] = 2;
+
+    auto product = [](std::pair<const std::array<std::size_t, 2>, int> &x) { x.second *= 2; return x; };
+    std::transform(elements.begin(), elements.end(), std::inserter(elements, elements.end()), product);
+
+    for(const auto &[key, value]: elements) {
+        std::cout << value << " ";
+    }
+
+    std::cout << std::endl;
     
     return 0;
 }
