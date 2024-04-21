@@ -1032,6 +1032,10 @@ namespace pacs {
                  * @return std::map<std::array<std::size_t, 2>, T> 
                  */
                 std::map<std::array<std::size_t, 2>, T> get_elements() const {
+                    #ifndef NDEBUG
+                    assert(!(this->compressed));
+                    #endif
+
                     return this->elements;
                 }
 
@@ -1041,6 +1045,10 @@ namespace pacs {
                  * @return std::vector<std::size_t> 
                  */
                 std::vector<std::size_t> get_inner() const {
+                    #ifndef NDEBUG
+                    assert(this->compressed);
+                    #endif
+
                     return this->inner;
                 }
                 
@@ -1050,6 +1058,10 @@ namespace pacs {
                  * @return std::vector<std::size_t> 
                  */
                 std::vector<std::size_t> get_outer() const {
+                    #ifndef NDEBUG
+                    assert(this->compressed);
+                    #endif
+
                     return this->outer;
                 }
 
@@ -1059,6 +1071,10 @@ namespace pacs {
                  * @return std::vector<T> 
                  */
                 std::vector<T> get_values() const {
+                    #ifndef NDEBUG
+                    assert(this->compressed);
+                    #endif
+                    
                     return this->values;
                 }
         };
