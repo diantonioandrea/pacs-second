@@ -437,7 +437,7 @@ namespace pacs {
                  */
                 Matrix operator /(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto product = [scalar](T element) {  return element *= scalar;};
+                    auto division = [scalar](T element) {  return element *= scalar;};
                     #endif
 
                     Matrix result = *this;
@@ -448,7 +448,7 @@ namespace pacs {
                     } else {
                         
                         #ifdef PARALLEL_PACS
-                            std::ranges::transform(std::execution::par, result.values, product);
+                            std::ranges::transform(std::execution::par, result.values, division);
                         #else
                             for(auto &value: result.values)
                                 value /= scalar;
