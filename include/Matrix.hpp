@@ -669,6 +669,7 @@ namespace pacs {
                             if(matrix.compressed) {
 
                                 // Iteration through this' rows.
+                                auto stop = (*(--this->elements.end())).first;
                                 for(std::size_t j = 0; j < this->rows() - 1; ++j) { // j-th row of this.
 
                                     // Row extraction from this.
@@ -678,7 +679,7 @@ namespace pacs {
                                     for(auto it = this->elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         row[(*it).first[1]] = (*it).second;
 
-                                        if((*it).first == (*(--this->elements.end())).first) // May cause overhead.
+                                        if((*it).first == stop) // May cause overhead.
                                             break;
                                     }
 
@@ -703,6 +704,7 @@ namespace pacs {
                             } else {
 
                                 // Iteration through this' rows.
+                                auto stop = (*(--this->elements.end())).first;
                                 for(std::size_t j = 0; j < this->rows(); ++j) { // j-th row of this.
 
                                     // Row extraction from this.
@@ -712,7 +714,7 @@ namespace pacs {
                                     for(auto it = this->elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         row[(*it).first[1]] = (*it).second;
 
-                                        if((*it).first == (*(--this->elements.end())).first) // May cause overhead.
+                                        if((*it).first == stop) // May cause overhead.
                                             break;
                                     }
 
@@ -770,6 +772,7 @@ namespace pacs {
                             } else {
 
                                 // Iteration through matrix' columns.
+                                auto stop = (*(--matrix.elements.end())).first;
                                 for(std::size_t j = 0; j < matrix.columns(); ++j) { // j-th column of matrix.
 
                                     // Column extraction from matrix.
@@ -779,7 +782,7 @@ namespace pacs {
                                     for(auto it = matrix.elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         column[(*it).first[1]] = (*it).second;
 
-                                        if((*it).first == (*(--matrix.elements.end())).first) // May cause overhead.
+                                        if((*it).first == stop) // May cause overhead.
                                             break;
                                     }
 
@@ -833,6 +836,7 @@ namespace pacs {
                             } else {
 
                                 // Iteration through matrix' columns.
+                                auto stop = (*(--matrix.elements.end())).first;
                                 for(std::size_t j = 0; j < matrix.columns(); ++j) { // j-th column of matrix.
 
                                     // Column extraction from matrix.
@@ -842,7 +846,7 @@ namespace pacs {
                                     for(auto it = matrix.elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         column[(*it).first[1]] = (*it).second;
 
-                                        if((*it).first == (*(--matrix.elements.end())).first) // May cause overhead.
+                                        if((*it).first == stop) // May cause overhead.
                                             break;
                                     }
 
@@ -929,6 +933,7 @@ namespace pacs {
                         } else {
 
                             for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
+
                                 #ifdef PARALLEL_PACS
                                     double sum = std::transform_reduce(std::execution::par, this->values.begin() + this->inner[j], this->values.begin() + this->inner[j + 1], 0.0, std::plus{}, absolute);
                                 #else
