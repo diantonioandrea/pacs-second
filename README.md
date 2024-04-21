@@ -19,7 +19,7 @@ It introduces the following class:
 ```cpp
 namespace pacs {
     namespace algebra {
-        template<typename T, Order O>
+        template<MatrixType T, Order O>
         class Matrix {...};
     }
 }
@@ -27,7 +27,7 @@ namespace pacs {
 
 which is designed to handle sparse matrices within $\mathbb{R}^{n \times m}$.
 
-Sparse matrices can be instantiated with any type `T`, and users can specify an ordering, either row-column or column-row, thanks to the following:
+Sparse matrices can be instantiated with any type `T` that complies with the properties required by matrix spaces. Users can specify an ordering, either row-column or column-row, thanks to the following:
 
 ```cpp
 namespace pacs {
@@ -67,10 +67,10 @@ A template function `market` is also present, which enables the user to **dump a
 ```cpp
 namespace pacs {
     namespace algebra {
-        template<typename T, Order O>
+        template<MatrixType T, Order O>
         Matrix<T, O> market(const std::string &, const bool &);
 
-        template<typename T, Order O>
+        template<MatrixType T, Order O>
         void market(const Matrix<T, O> &, const std::string &, const bool &);
     }
 }
