@@ -422,7 +422,7 @@ namespace pacs {
                 }
 
                 /**
-                 * @brief Returns the division of Matrix x Scalar.
+                 * @brief Returns the division of Matrix / Scalar.
                  * 
                  * @tparam T 
                  * @param scalar 
