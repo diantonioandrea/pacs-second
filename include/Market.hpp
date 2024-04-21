@@ -14,8 +14,9 @@
 // Type.
 #include <Type.hpp>
 
-// Filename.
+// Strings.
 #include <string>
+#include <cstring>
 
 // IO handling.
 #include <iostream>
