@@ -414,21 +414,14 @@ namespace pacs {
                  */
                 Matrix operator *(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto map_product = [scalar](T &element) { element.second *= scalar; return element; };
                     auto product = [scalar](T element) { return element *= scalar; };
                     #endif
 
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
-
-                        #ifdef PARALLEL_PACS
-                            std::transform(std::execution::par, result.elements.begin(), result.elements.end(), std::inserter(results.elements.end()), map_product);
-                        #else
-                            for(const auto &[key, value]: result.elements) // Extremely slow.
-                                result.elements[key] *= scalar;
-                        #endif
-
+                        for(const auto &[key, value]: result.elements) // Extremely slow.
+                            result.elements[key] *= scalar;
                     } else {
                         
                         #ifdef PARALLEL_PACS // Actually faster.
@@ -455,19 +448,14 @@ namespace pacs {
                  */
                 Matrix operator /(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto division = [scalar](T &element) { element.second /= scalar; return element; };
                     auto division = [scalar](T element) { return element *= scalar; };
                     #endif
 
                     Matrix result = *this;
 
                     if(!(result.compressed)) {
-                        #ifdef PARALLEL_PACS
-                            std::transform(std::execution::par, result.elements.begin(), result.elements.end(), std::inserter(results.elements.end()), map_division);
-                        #else
-                            for(const auto &[key, value]: result.elements) // Extremely slow.
-                                result.elements[key] /= scalar;
-                        #endif
+                        for(const auto &[key, value]: result.elements) // Extremely slow.
+                            result.elements[key] /= scalar;
                     } else {
                         
                         #ifdef PARALLEL_PACS // Actually faster.
