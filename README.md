@@ -11,6 +11,7 @@ _A Sparse Matrix_
     - [Compilation and Execution](#compilation-and-execution)
 - [Notes to the Reader](#notes-to-the-reader)
     - [On the `tester` Function](#on-the-tester-function)
+    - [On the Parallelization of the `Matrix<T, O> * std::vector<T>` Product](#on-the-parallelization-of-the-matrixt-o--stdvectort-product)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
 
@@ -175,3 +176,22 @@ namespace pacs {
 ```
 
 This approach accepts a custom lambda function each time and times it. However, I prefer the first solution as I prefer having more customizable output and don't mind the extra code, especially since it's just for testing purposes.
+
+### On the Parallelization of the `Matrix<T, O> * std::vector<T>` Product
+
+Even though it may seem that parallelizing the `Matrix<T, O> * std::vector<T>` product would make it faster, due to the sparse structure of the matrices, it's actually slower than the approach used in the code.
+
+Hence, the following remains the faster approach I've opted for[^3]:
+
+[^3]: `Matrix<T, Row> * std::vector<T>`.
+
+``` cpp
+std::vector<T> result;
+
+...
+
+for(std::size_t j = 0; j < result.size(); ++j) {
+    for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
+        result[j] += this->values[i] * vector[this->outer[i]];
+}
+```
