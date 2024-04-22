@@ -9,6 +9,8 @@ _A Sparse Matrix_
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
     - [Compilation and Execution](#compilation-and-execution)
+- [Notes to the Reader](#notes-to-the-reader)
+    - [On the `tester` Function](#on-the-tester-function)
 
 ## Introduction
 
@@ -16,7 +18,7 @@ This repository presents a header-only template implementation of sparse matrice
 
 It introduces the following class:
 
-```cpp
+``` cpp
 namespace pacs {
     namespace algebra {
         template<MatrixType T, Order O>
@@ -29,7 +31,7 @@ which is designed to handle sparse matrices within $\mathbb{R}^{n \times m}$.
 
 Sparse matrices can be instantiated with any type `T` that complies with the properties required by matrix spaces. Users can specify an ordering, either row-column or column-row, thanks to the following:
 
-```cpp
+``` cpp
 namespace pacs {
     namespace algebra {
         enum class Order {Row, Column};
@@ -41,7 +43,7 @@ Storage is designed to accommodate either a dynamic allocation following a **COO
 
 Reading and writing are facilitated through the following call operators:
 
-```cpp
+``` cpp
 T operator ()(const std::size_t &, const std::size_t &) const;
 T &operator ()(const std::size_t &, const std::size_t &);
 ```
@@ -52,7 +54,7 @@ These matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matri
 
 Moreover, these matrices have a template method `norm` which accepts, as a template parameter, one of the followings:
 
-```cpp
+``` cpp
 namespace pacs {
     namespace algebra {
         enum class Norm {One, Infinity, Frobenius};
@@ -64,7 +66,7 @@ and returns **the corresponding matrix norm.**
 
 A template function `market` is also present, which enables the user to **dump and load a matrix to and from a text file** using the [Matrix Market Format](https://math.nist.gov/MatrixMarket/).
 
-```cpp
+``` cpp
 namespace pacs {
     namespace algebra {
         template<MatrixType T, Order O>
@@ -131,3 +133,43 @@ and parallel computing can be enabled by removing, as needed, the comments' `#`s
 ```
 
 [^2]: Ensure the `tbb` module is loaded if needed.
+
+## Notes to the Reader
+
+### On the `tester` Function
+
+Tests are designed by overloading the `tester` function multiple times in the following ways:
+
+``` cpp
+namespace pacs {
+    namespace algebra {
+        // Tests Matrix x Vector.
+        template<typename T, Order O>
+        void tester(const Matrix<T, O> &, const std::vector<T> &, const std::size_t &);
+
+        // Tests Matrix x Matrix.
+        template<typename T, Order O>
+        void tester(const Matrix<T, O> &, const Matrix<T, O> &, const std::size_t &);
+
+        // Tests Matrix x Scalar.
+        template<typename T, Order O>
+        void tester(const Matrix<T, O> &, const T &, const std::size_t &);
+
+        // Tests Matrix norm.
+        template<typename T, Order O>
+        void tester(const Matrix<T, O> &, const std::size_t &);
+    }
+}
+```
+
+A single `tester` function could have been designed in the following way:
+
+``` cpp
+namespace pacs {
+    namespace algebra {
+        void tester(TestFunction &, const std::size_t &);
+    }
+}
+```
+
+This approach accepts a custom lambda function each time and times it. However, I prefer the first solution as I prefer having more customizable output and don't mind the extra code, especially since it's just for testing purposes.
