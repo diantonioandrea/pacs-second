@@ -34,9 +34,9 @@ int main(int argc, char **argv) {
     algebra::Matrix<double, algebra::Column> column_matrix_1 = column_matrix;
 
     std::vector<double> vector;
-    vector.resize(row_matrix.rows(), 1.0);
+    vector.resize(row_matrix.rows(), 1.5);
 
-    double scalar{1.0};
+    double scalar{1.5};
 
     // Tests.
 

@@ -43,7 +43,7 @@ namespace pacs {
 
             // Tests.
             auto start = std::chrono::high_resolution_clock::now();
-            auto partial = std::chrono::high_resolution_clock::now();
+            decltype(start) partial;
 
             // Matrix x Vector.
             if(matrix.columns() == vector.size()) {
@@ -142,7 +142,7 @@ namespace pacs {
          * @param tests 
          */
         template<MatrixType T, Order O>
-        void tester(const Matrix<T, O> &matrix, const std::size_t &tests = 3E5) {
+        void tester(const Matrix<T, O> &matrix, const std::size_t &tests = 5E5) {
             std::cout << "\nTesting for Matrix norm" << std::endl;
 
             // Test.
