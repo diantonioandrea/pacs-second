@@ -43,27 +43,30 @@ namespace pacs {
 
             // Tests.
             auto start = std::chrono::high_resolution_clock::now();
+            auto partial = std::chrono::high_resolution_clock::now();
 
             // Matrix x Vector.
             if(matrix.columns() == vector.size()) {
                 std::cout << "- Testing Matrix x Vector, elapsed: ";
+                partial = std::chrono::high_resolution_clock::now();
                 ++products;
 
                 for(std::size_t j = 0; j < tests; ++j)
                     matrix * vector;
 
-                std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+                std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - partial).count() / 1E6 << " second(s)." << std::endl;
             }
 
             // Vector x Matrix.
             if(matrix.rows() == vector.size()) {
                 std::cout << "- Testing Vector x Matrix, elapsed: ";
+                partial = std::chrono::high_resolution_clock::now();
                 ++products;
                 
                 for(std::size_t j = 0; j < tests; ++j)
                     vector * matrix;
 
-                std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+                std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - partial).count() / 1E6 << " second(s)." << std::endl;
             }
 
             auto stop = std::chrono::high_resolution_clock::now();
@@ -144,27 +147,30 @@ namespace pacs {
 
             // Test.
             auto start = std::chrono::high_resolution_clock::now();
+            auto partial = std::chrono::high_resolution_clock::now();
 
             std::cout << "- Testing One norm, elapsed: ";
 
             for(std::size_t j = 0; j < tests; ++j)
                 matrix.template norm<One>(); // Weird required syntax.
 
-            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - partial).count() / 1E6 << " second(s)." << std::endl;
 
             std::cout << "- Testing Infinity norm, elapsed: ";
+            partial = std::chrono::high_resolution_clock::now();
 
             for(std::size_t j = 0; j < tests; ++j)
                 matrix.template norm<Infinity>(); // Weird required syntax.
 
-            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - partial).count() / 1E6 << " second(s)." << std::endl;
 
             std::cout << "- Testing Frobenius norm, elapsed: ";
+            partial = std::chrono::high_resolution_clock::now();
 
             for(std::size_t j = 0; j < tests; ++j)
                 matrix.template norm<Frobenius>(); // Weird required syntax.
 
-            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - partial).count() / 1E6 << " second(s)." << std::endl;
 
             auto stop = std::chrono::high_resolution_clock::now();
 
