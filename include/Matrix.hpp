@@ -406,7 +406,6 @@ namespace pacs {
                 /**
                  * @brief Returns the product of Matrix x Scalar.
                  * 
-                 * @tparam T 
                  * @param scalar 
                  * @return Matrix 
                  */
@@ -433,20 +432,43 @@ namespace pacs {
                     return result;
                 }
 
+                /**
+                 * @brief Returns the product and assignment of Matrix *= Scalar.
+                 * 
+                 * @param scalar 
+                 * @return Matrix& 
+                 */
                 Matrix &operator *=(const T &scalar) {
-                    return *this = *this * scalar;
+                    #ifdef PARALLEL_PACS
+                    auto product = [scalar](T element) { return element *= scalar; };
+                    #endif
+
+                    if(!(this->compressed)) {
+                        for(const auto &[key, value]: this->elements) // Extremely slow.
+                            this->elements[key] *= scalar;
+                    } else {
+                        
+                        #ifdef PARALLEL_PACS // Actually faster.
+                            std::transform(std::execution::par, this->values.begin(), this->values.end(), this->values.begin(), product);
+                        #else
+                            for(auto &value: this->values)
+                                value *= scalar;
+                        #endif
+
+                    }
+
+                    return *this;
                 }
 
                 /**
                  * @brief Returns the division of Matrix / Scalar.
                  * 
-                 * @tparam T 
                  * @param scalar 
                  * @return Matrix 
                  */
                 Matrix operator /(const T &scalar) const {
                     #ifdef PARALLEL_PACS
-                    auto division = [scalar](T element) { return element *= scalar; };
+                    auto division = [scalar](T element) { return element /= scalar; };
                     #endif
 
                     Matrix result = *this;
@@ -468,8 +490,32 @@ namespace pacs {
                     return result;
                 }
                 
+                /**
+                 * @brief Returns the division and assignment of Matrix /= Scalar.
+                 * 
+                 * @param scalar 
+                 * @return Matrix& 
+                 */
                 Matrix &operator /=(const T &scalar) {
-                    return *this = *this / scalar;
+                    #ifdef PARALLEL_PACS
+                    auto division = [scalar](T element) { return element *= scalar; };
+                    #endif
+
+                    if(!(this->compressed)) {
+                        for(const auto &[key, value]: this->elements) // Extremely slow.
+                            this->elements[key] /= scalar;
+                    } else {
+                        
+                        #ifdef PARALLEL_PACS // Actually faster.
+                            std::transform(std::execution::par, this->values.begin(), this->values.end(), this->values.begin(), division);
+                        #else
+                            for(auto &value: this->values)
+                                value /= scalar;
+                        #endif
+
+                    }
+
+                    return *this;
                 }
 
                 /**
