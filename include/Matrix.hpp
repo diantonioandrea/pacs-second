@@ -258,14 +258,12 @@ namespace pacs {
                     assert((j < first) && (k < second));
                     #endif
 
-                    // Immediate reference on uncompressed Matrix.
-                    if(!(this->compressed))
-                        return this->elements[{j, k}];
-
                     // Looks for the value on compressed Matrix.
-                    for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
-                        if(k == this->outer[i])
-                            return this->values[i];
+                    if(this->compressed) {
+                        for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
+                            if(k == this->outer[i])
+                                return this->values[i];
+                        }
                     }
 
                     // Uncompresses and returns reference on missing value.
