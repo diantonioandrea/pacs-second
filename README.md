@@ -12,6 +12,8 @@ _A Sparse Matrix_
 - [Notes to the Reader](#notes-to-the-reader)
     - [On the `tester` Function](#on-the-tester-function)
 
+:warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
+
 ## Introduction
 
 This repository presents a header-only template implementation of sparse matrices.
