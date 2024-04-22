@@ -34,6 +34,7 @@ namespace pacs {
          * @tparam O 
          * @param matrix 
          * @param vector 
+         * @param tests 
          */
         template<MatrixType T, Order O>
         void tester(const Matrix<T, O> &matrix, const std::vector<T> &vector, const std::size_t &tests = 5E5) {
@@ -78,8 +79,9 @@ namespace pacs {
          * 
          * @tparam T 
          * @tparam O 
-         * @param matrix 
-         * @param vector 
+         * @param first 
+         * @param second 
+         * @param tests 
          */
         template<MatrixType T, Order O>
         void tester(const Matrix<T, O> &first, const Matrix<T, O> &second, const std::size_t &tests = 1E3) {
@@ -124,6 +126,50 @@ namespace pacs {
 
             // Results.
             std::cout << "\nTested " << tests << " products between a " << matrix.rows() << " by " << matrix.columns() << " sparse matrix and a scalar." << std::endl;
+            std::cout << "Matrix has a sparsity of " << matrix.sparsity() << ", it is " << (O == Row ? "row-first" : "column-first") << " ordered and it is " << (matrix.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
+            std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1E6 << " second(s)." << std::endl;
+        }
+
+        /**
+         * @brief Prints the time needed for an arbitrary number of Matrix norm calculations, along with some other info.
+         * 
+         * @tparam T 
+         * @tparam O 
+         * @param matrix 
+         * @param tests 
+         */
+        template<MatrixType T, Order O>
+        void tester(const Matrix<T, O> &matrix, const std::size_t &tests = 3E5) {
+            std::cout << "\nTesting for Matrix norm" << std::endl;
+
+            // Test.
+            auto start = std::chrono::high_resolution_clock::now();
+
+            std::cout << "- Testing One norm, elapsed: ";
+
+            for(std::size_t j = 0; j < tests; ++j)
+                matrix.template norm<One>(); // Weird required syntax.
+
+            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+
+            std::cout << "- Testing Infinity norm, elapsed: ";
+
+            for(std::size_t j = 0; j < tests; ++j)
+                matrix.template norm<Infinity>(); // Weird required syntax.
+
+            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+
+            std::cout << "- Testing Frobenius norm, elapsed: ";
+
+            for(std::size_t j = 0; j < tests; ++j)
+                matrix.template norm<Frobenius>(); // Weird required syntax.
+
+            std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() / 1E6 << " second(s)." << std::endl;
+
+            auto stop = std::chrono::high_resolution_clock::now();
+
+            // Results.
+            std::cout << "\nTested " << 3 * tests << " norms for a " << matrix.rows() << " by " << matrix.columns() << " sparse matrix." << std::endl;
             std::cout << "Matrix has a sparsity of " << matrix.sparsity() << ", it is " << (O == Row ? "row-first" : "column-first") << " ordered and it is " << (matrix.is_compressed() ? "in" : "not in") << " compressed form." << std::endl;
             std::cout << "Elapsed time: " << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count() / 1E6 << " second(s)." << std::endl;
         }

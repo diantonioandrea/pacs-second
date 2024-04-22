@@ -107,6 +107,25 @@ int main(int argc, char **argv) {
     // Compressed column-first matrix.
     column_matrix.compress();
     algebra::tester(column_matrix, scalar);
+
+    // Norms.
+
+    row_matrix.uncompress();
+    column_matrix.uncompress();
+
+    // Uncompressed row-first matrix.
+    algebra::tester(row_matrix);
+
+    // Compressed row-first matrix.
+    row_matrix.compress();
+    algebra::tester(row_matrix);
+
+    // Uncompressed column-first matrix.
+    algebra::tester(column_matrix);
+
+    // Compressed column-first matrix.
+    column_matrix.compress();
+    algebra::tester(column_matrix);
     
     return 0;
 }
