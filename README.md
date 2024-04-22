@@ -50,7 +50,7 @@ T operator ()(const std::size_t &, const std::size_t &) const;
 T &operator ()(const std::size_t &, const std::size_t &);
 ```
 
-with the latter only acting on uncompressed matrices.
+with the latter uncompressing a matrix if needed.
 
 These matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matrix<T, O> * Matrix<T, O>` matrix product.
 
