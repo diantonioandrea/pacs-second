@@ -22,11 +22,9 @@ This repository presents a header-only template implementation of sparse matrice
 It introduces the following class:
 
 ``` cpp
-namespace pacs {
-    namespace algebra {
-        template<MatrixType T, Order O>
-        class Matrix {...};
-    }
+namespace algebra {
+    template<MatrixType T, Order O>
+    class Matrix {...};
 }
 ```
 
@@ -35,10 +33,8 @@ which is designed to handle sparse matrices within $\mathbb{R}^{n \times m}$.
 Sparse matrices can be instantiated with any type `T` that complies with the properties required by matrix spaces. Users can specify an ordering, either row-column or column-row, thanks to the following:
 
 ``` cpp
-namespace pacs {
-    namespace algebra {
-        enum class Order {Row, Column};
-    }
+namespace algebra {
+    enum class Order {Row, Column};
 }
 ```
 
@@ -58,10 +54,8 @@ These matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matri
 Moreover, these matrices have a template method `norm` which accepts, as a template parameter, one of the followings:
 
 ``` cpp
-namespace pacs {
-    namespace algebra {
-        enum class Norm {One, Infinity, Frobenius};
-    }
+namespace algebra {
+    enum class Norm {One, Infinity, Frobenius};
 }
 ```
 
@@ -70,14 +64,12 @@ and returns **the corresponding matrix norm.**
 A template function `market` is also present, which enables the user to **dump and load a matrix to and from a text file** using the [Matrix Market Format](https://math.nist.gov/MatrixMarket/).
 
 ``` cpp
-namespace pacs {
-    namespace algebra {
-        template<MatrixType T, Order O>
-        Matrix<T, O> market(const std::string &, const bool &);
+namespace algebra {
+    template<MatrixType T, Order O>
+    Matrix<T, O> market(const std::string &, const bool &);
 
-        template<MatrixType T, Order O>
-        void market(const Matrix<T, O> &, const std::string &, const bool &);
-    }
+    template<MatrixType T, Order O>
+    void market(const Matrix<T, O> &, const std::string &, const bool &);
 }
 ```
 
@@ -144,34 +136,30 @@ and parallel computing can be enabled by removing, as needed, the comments' `#`s
 Tests are designed by overloading the `tester` function multiple times in the following ways:
 
 ``` cpp
-namespace pacs {
-    namespace algebra {
-        // Tests Matrix x Vector.
-        template<typename T, Order O>
-        void tester(const Matrix<T, O> &, const std::vector<T> &, const std::size_t &);
+namespace algebra {
+    // Tests Matrix x Vector.
+    template<typename T, Order O>
+    void tester(const Matrix<T, O> &, const std::vector<T> &, const std::size_t &);
 
-        // Tests Matrix x Matrix.
-        template<typename T, Order O>
-        void tester(const Matrix<T, O> &, const Matrix<T, O> &, const std::size_t &);
+    // Tests Matrix x Matrix.
+    template<typename T, Order O>
+    void tester(const Matrix<T, O> &, const Matrix<T, O> &, const std::size_t &);
 
-        // Tests Matrix x Scalar.
-        template<typename T, Order O>
-        void tester(const Matrix<T, O> &, const T &, const std::size_t &);
+    // Tests Matrix x Scalar.
+    template<typename T, Order O>
+    void tester(const Matrix<T, O> &, const T &, const std::size_t &);
 
-        // Tests Matrix norm.
-        template<typename T, Order O>
-        void tester(const Matrix<T, O> &, const std::size_t &);
-    }
+    // Tests Matrix norm.
+    template<typename T, Order O>
+    void tester(const Matrix<T, O> &, const std::size_t &);
 }
 ```
 
 A single `tester` function could have been designed in the following way:
 
 ``` cpp
-namespace pacs {
-    namespace algebra {
-        void tester(TestFunction &, const std::size_t &);
-    }
+namespace algebra {
+    void tester(TestFunction &, const std::size_t &);
 }
 ```
 
