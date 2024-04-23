@@ -658,14 +658,14 @@ namespace pacs {
 
                                     // Row extraction from this.
                                     std::vector<T> row;
-                                    row.resize(matrix.columns(), static_cast<T>(0));
+                                    row.resize(this->columns(), static_cast<T>(0));
 
                                     for(std::size_t h = this->inner[j]; h < this->inner[j + 1]; ++h)
                                         row[this->outer[h]] = this->values[h];
 
                                     // Result's row.
                                     std::vector<T> product;
-                                    product.resize(this->columns(), static_cast<T>(0));
+                                    product.resize(matrix.columns(), static_cast<T>(0));
 
                                     // Linear combination of matrix' rows.
                                     for(std::size_t k = 0; k < matrix.rows(); ++k) { // k-th row of matrix.
@@ -688,14 +688,14 @@ namespace pacs {
 
                                     // Row extraction from this.
                                     std::vector<T> row;
-                                    row.resize(matrix.columns(), static_cast<T>(0));
+                                    row.resize(this->columns(), static_cast<T>(0));
 
                                     for(std::size_t h = this->inner[j]; h < this->inner[j + 1]; ++h)
                                         row[this->outer[h]] = this->values[h];
 
                                     // Result's row.
                                     std::vector<T> product;
-                                    product.resize(this->columns(), static_cast<T>(0));
+                                    product.resize(matrix.columns(), static_cast<T>(0));
 
                                     // Full iteration on matrix' non-zero elements.
                                     for(const auto &[key, value]: matrix.elements)
@@ -718,7 +718,7 @@ namespace pacs {
 
                                     // Row extraction from this.
                                     std::vector<T> row;
-                                    row.resize(matrix.columns(), static_cast<T>(0));
+                                    row.resize(this->columns(), static_cast<T>(0));
 
                                     for(auto it = this->elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         row[(*it).first[1]] = (*it).second;
@@ -729,7 +729,7 @@ namespace pacs {
 
                                     // Result's row.
                                     std::vector<T> product;
-                                    product.resize(this->columns(), static_cast<T>(0));
+                                    product.resize(matrix.columns(), static_cast<T>(0));
 
                                     // Linear combination of matrix' rows.
                                     for(std::size_t k = 0; k < matrix.rows(); ++k) { // k-th row of matrix.
@@ -753,7 +753,7 @@ namespace pacs {
 
                                     // Row extraction from this.
                                     std::vector<T> row;
-                                    row.resize(matrix.columns(), static_cast<T>(0));
+                                    row.resize(this->columns(), static_cast<T>(0));
 
                                     for(auto it = this->elements.lower_bound({j, 0}); (*it).first < std::array<std::size_t, 2>{j + 1, 0}; ++it) {
                                         row[(*it).first[1]] = (*it).second;
@@ -764,7 +764,7 @@ namespace pacs {
 
                                     // Result's row.
                                     std::vector<T> product;
-                                    product.resize(this->columns(), static_cast<T>(0));
+                                    product.resize(matrix.columns(), static_cast<T>(0));
 
                                     // Full iteration on matrix' non-zero elements.
                                     for(const auto &[key, value]: matrix.elements)
@@ -1053,6 +1053,10 @@ namespace pacs {
                  */
                 inline double density() const {
                     return 1.0 - this->sparsity();
+                }
+
+                constexpr Order order() const {
+                    return O;
                 }
 
                 // OUTPUT.
