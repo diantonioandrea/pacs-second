@@ -221,7 +221,7 @@ namespace pacs {
                 // CALL OPERATORS.
 
                 /**
-                 * @brief Const call operator, returns the (i, j)-th element.
+                 * @brief Const call operator, returns the (i, j)-th element if present.
                  *
                  * @param j
                  * @param k
@@ -246,29 +246,52 @@ namespace pacs {
                     return static_cast<T>(0);
                 }
 
+                // INSERTION.
+
                 /**
-                 * @brief Call operator, returns a reference to the (i, j)-th element.
-                 *
-                 * @param j
-                 * @param k
-                 * @return T&
+                 * @brief Insert a new element.
+                 * 
+                 * @param j 
+                 * @param k 
+                 * @param element 
                  */
-                T &operator ()(const std::size_t &j, const std::size_t &k) {
-                    #ifndef NDEBUG // Out-of-bound check.
+                void insert(const std::size_t &j, const std::size_t &k, const T &element) {
+                    #ifndef NDEBUG // Out-of-bound and uncompression check.
                     assert((j < first) && (k < second));
+                    assert(!(this->compressed));
                     #endif
 
-                    // Looks for the value on compressed Matrix.
-                    if(this->compressed) {
-                        for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
-                            if(k == this->outer[i])
-                                return this->values[i];
-                        }
-                    }
+                    #ifndef NDEBUG // Separate check not needed.
+                        if(std::abs(element) > TOLERANCE_PACS)
+                            this->elements[{j, k}] = element;
+                    #else
+                        this->elements[{j, k}] = element;
+                    #endif
+                }
 
-                    // Uncompresses and returns reference on missing value.
-                    this->uncompress();
-                    return this->elements[{j, k}];
+                /**
+                 * @brief Inserts a vector of new elements.
+                 * 
+                 * @param coordinates 
+                 * @param elements 
+                 */
+                void insert(const std::vector<std::array<std::size_t, 2> > &coordinates, std::vector<T> &elements) {
+                    #ifndef NDEBUG // Out-of-bound and uncompression check.
+                    assert(!(this->compressed));
+                    assert(coordinates.size() == elements.size());
+                    #endif
+
+                    for(std::size_t j = 0; j < coordinates.size(); ++j) {
+                        #ifndef NDEBUG
+                            assert(coordinates[j][0] < this->first);
+                            assert(coordinates[j][1] < this->second);
+
+                            if(std::abs(elements[j]) > TOLERANCE_PACS)
+                                this->elements[coordinates[j]] = elements[j];
+                        #else
+                            this->elements[coordinates[j]] = elements[j];
+                        #endif
+                    }
                 }
 
                 // SHAPE.

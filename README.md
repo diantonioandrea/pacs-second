@@ -40,14 +40,15 @@ namespace algebra {
 
 Storage is designed to accommodate either a dynamic allocation following a **COOmap** (Coordinate Map) format or compression into a **CSR** (Compressed Sparse Row) or **CSC** (Compressed Sparse Column) format, contingent upon its ordering. Constructors adhere to this principle by accepting either a single map for the **COOmap** format or three vectors for the **CSR**/**CSC** format, along with matrix sizing consistent with its ordering.
 
-Reading and writing are facilitated through the following call operators:
+Reading and writing are facilitated through the following methods:
 
 ``` cpp
 T operator ()(const std::size_t &, const std::size_t &) const;
-T &operator ()(const std::size_t &, const std::size_t &);
+void insert(const std::size_t &, const std::size_t &, const T &);
+void insert(const std::vector<std::array<std::size_t, 2> > &, std::vector<T> &);
 ```
 
-with the latter uncompressing a matrix if needed.
+Writing's enabled only on uncompressed matrices.
 
 These matrices support `Matrix<T, O> * std::vector<T>` vector product and `Matrix<T, O> * Matrix<T, O>` matrix product.
 
