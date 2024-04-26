@@ -24,7 +24,7 @@ run: $(EXEC)
 	@echo "Done!"
 
 $(EXEC): $(OBJECT)
-	@echo "Linking $@ with the following flags: $(LDFLAGS) $(LDLIBS)"
+	@echo "Linking $^ to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(OBJECT): $(SOURCE) $(HEADERS)
