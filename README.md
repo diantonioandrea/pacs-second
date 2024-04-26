@@ -11,6 +11,7 @@ _A Sparse Matrix_
     - [Compilation and Execution](#compilation-and-execution)
 - [Notes to the Reader](#notes-to-the-reader)
     - [On the `tester` Function](#on-the-tester-function)
+    - [On the `insert` Method](#on-the-insert-method)
     - [On the Parallelization of the `Matrix<T, O> * std::vector<T>` Product](#on-the-parallelization-of-the-matrixt-o--stdvectort-product)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
@@ -45,7 +46,8 @@ Reading and writing are facilitated through the following methods:
 ``` cpp
 T operator ()(const std::size_t &, const std::size_t &) const;
 void insert(const std::size_t &, const std::size_t &, const T &);
-void insert(const std::vector<std::array<std::size_t, 2> > &, std::vector<T> &);
+void insert(const std::vector<std::array<std::size_t, 2> > &, const std::vector<T> &);
+void insert(const std::array<std::size_t, 2> &, const std::array<std::size_t, 2> &, const std::vector<T> &);
 ```
 
 Writing's enabled only on uncompressed matrices.
@@ -165,6 +167,10 @@ namespace algebra {
 ```
 
 This approach accepts a custom lambda function each time and times it. However, I prefer the first solution as I prefer having more customizable output and don't mind the extra code, especially since it's just for testing purposes.
+
+### On the `insert` Method
+
+Instead of overloading the `T operator () const` for accessing elements and implementing a `T &operator ()` for editing elements, I chose to implement different `insert` methods. These methods accept either a pair of indexes `j, k`, a vector of coordinates, or a start and an end for a range of coordinates for the insertion and editing of elements.
 
 ### On the Parallelization of the `Matrix<T, O> * std::vector<T>` Product
 

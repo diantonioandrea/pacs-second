@@ -275,7 +275,7 @@ namespace pacs {
                  * @param coordinates 
                  * @param elements 
                  */
-                void insert(const std::vector<std::array<std::size_t, 2> > &coordinates, std::vector<T> &elements) {
+                void insert(const std::vector<std::array<std::size_t, 2> > &coordinates, const std::vector<T> &elements) {
                     #ifndef NDEBUG // Out-of-bound and uncompression check.
                     assert(!(this->compressed));
                     assert(coordinates.size() == elements.size());
@@ -293,6 +293,35 @@ namespace pacs {
                             this->elements[coordinates[j]] = elements[j];
                         #endif
 
+                    }
+                }
+
+                /**
+                 * @brief Inserts a range of new elements.
+                 * 
+                 * @param start 
+                 * @param end 
+                 * @param elements 
+                 */
+                void insert(const std::array<std::size_t, 2> &start, const std::array<std::size_t, 2> &end, const std::vector<T> &elements) {
+                    #ifndef NDEBUG // Out-of-bound and uncompression check.
+                    assert(!(this->compressed));
+                    assert((start[0] < end[0]) && (end[0] < this->first));
+                    assert((start[1] < end[1]) && (end[1] < this->second));
+                    assert((end[1] - start[1]) * (end[0] - start[0]) == elements.size());
+                    #endif
+
+                    for(std::size_t j = start[0]; j < end[0]; ++j) {
+                        for(std::size_t k = start[1]; k < end[1]; ++k) {
+
+                            #ifndef NDEBUG
+                                if(std::abs(elements[j]) > TOLERANCE_PACS)
+                                    this->elements[{j, k}] = elements[j * (end[1] - start[1]) + k];
+                            #else
+                                this->elements[{j, k}] = elements[j * (end[1] - start[1]) + k];
+                            #endif
+
+                        }
                     }
                 }
 
