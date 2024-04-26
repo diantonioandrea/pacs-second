@@ -24,15 +24,18 @@ run: $(EXEC)
 	@echo "Done!"
 
 $(EXEC): $(OBJECT)
-	$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
+	@echo "Linking $@ with the following flags: $(LDFLAGS) $(LDLIBS)"
+	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(OBJECT): $(SOURCE) $(HEADERS)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+	@echo "Compiling $< with the following flags: $(CXXFLAGS) $(CPPFLAGS)"
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Clean.
 clean:
-	$(RM) $(OBJECT)
-	$(RM) $(OUTPUT)
+	@echo "Cleaning the repo."
+	@$(RM) $(OBJECT)
+	@$(RM) $(OUTPUT)
 
 distclean: clean
-	$(RM) $(EXEC)
+	@$(RM) $(EXEC)
