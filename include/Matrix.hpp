@@ -123,13 +123,13 @@ namespace pacs {
                     assert((first > 0) && (second > 0));
 
                     assert(inner.size() == first + 1);
-
                     for(std::size_t j = 1; j < inner.size(); ++j) {
                         assert(inner[j - 1] < values.size());
                         assert(inner[j] < values.size());
                         assert(inner[j - 1] <= inner[j]);
                     }
 
+                    assert(outer.size() = values.size());
                     for(std::size_t j = 1; j < outer.size(); ++j) {
                         assert(outer[j - 1] < second);
                         assert(outer[j] < second);
@@ -282,6 +282,7 @@ namespace pacs {
                     #endif
 
                     for(std::size_t j = 0; j < coordinates.size(); ++j) {
+
                         #ifndef NDEBUG
                             assert(coordinates[j][0] < this->first);
                             assert(coordinates[j][1] < this->second);
@@ -291,6 +292,7 @@ namespace pacs {
                         #else
                             this->elements[coordinates[j]] = elements[j];
                         #endif
+
                     }
                 }
 
@@ -376,6 +378,7 @@ namespace pacs {
                                 this->values.emplace_back(value);
                                 ++index;
                             #endif
+
                         }
 
                         this->inner[j] = index;
@@ -398,13 +401,14 @@ namespace pacs {
                     // Uncompression.
                     for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k) {
+
                             #ifndef NDEBUG
-                                if(std::abs(this->values[k]) > TOLERANCE_PACS) {
+                                if(std::abs(this->values[k]) > TOLERANCE_PACS)
                                     this->elements[{j, this->outer[k]}] = this->values[k];
-                                }
                             #else
                                 this->elements[{j, this->outer[k]}] = this->values[k];
                             #endif
+
                         }
                     }
 
@@ -948,7 +952,7 @@ namespace pacs {
                  * @tparam N
                  * @return double
                  */
-                template<Norm N = Frobenius>
+                template<Norm N>
                 double norm() const {
                     #ifdef PARALLEL_PACS
                         auto absolute = [](const double &x) { return std::abs(x); };
@@ -1078,6 +1082,11 @@ namespace pacs {
                     return 1.0 - this->sparsity();
                 }
 
+                /**
+                 * @brief Returns the order of the Matrix.
+                 * 
+                 * @return constexpr Order 
+                 */
                 constexpr Order order() const {
                     return O;
                 }
