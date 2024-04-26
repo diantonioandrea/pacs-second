@@ -24,12 +24,12 @@ run: $(EXEC)
 	@echo "Done!"
 
 $(EXEC): $(OBJECT)
-	@echo "Linking $^ to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"
+	@echo "Linking $^ to $@ with the following flags: \"$(LDFLAGS) $(LDLIBS)\""
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(OBJECT): $(SOURCE) $(HEADERS)
-	@echo "Compiling $< with the following flags: $(CXXFLAGS) $(CPPFLAGS)"
-	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+	@echo "Compiling $< with the following flags: \"$(CXXFLAGS)\""
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean.
 clean:
