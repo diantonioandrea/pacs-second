@@ -17,7 +17,8 @@ OUTPUT = ./output.txt
 
 # Rules.
 compile: $(EXEC)
-
+	@echo "Done!"
+	
 run: $(EXEC)
 	@echo "Running the script and redirecting the output to $(OUTPUT)..."
 	@./$(EXEC) > $(OUTPUT)
