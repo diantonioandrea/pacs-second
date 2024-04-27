@@ -18,18 +18,18 @@ OUTPUT = ./output.txt
 # Rules.
 compile: $(EXEC)
 	@echo "Done!"
-	
+
 run: $(EXEC)
-	@echo "Running the script and redirecting the output to $(OUTPUT)..."
+	@echo "Running the script and redirecting the output to $(OUTPUT)"
 	@./$(EXEC) > $(OUTPUT)
 	@echo "Done!"
 
 $(EXEC): $(OBJECT)
-	@echo "Linking $^ to $@ with the following flags: \"$(LDFLAGS) $(LDLIBS)\""
+	@echo "Linking $^ to $@"
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(OBJECT): $(SOURCE) $(HEADERS)
-	@echo "Compiling $< with the following flags: \"$(CXXFLAGS)\""
+	@echo "Compiling $<"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean.
