@@ -262,10 +262,10 @@ namespace pacs {
                     #endif
 
                     #ifndef NDEBUG // Separate check not needed.
-                        if(std::abs(element) > TOLERANCE_PACS)
-                            this->elements[{j, k}] = element;
-                    #else
+                    if(std::abs(element) > TOLERANCE_PACS)
                         this->elements[{j, k}] = element;
+                    #else
+                    this->elements[{j, k}] = element;
                     #endif
                 }
 
@@ -284,13 +284,13 @@ namespace pacs {
                     for(std::size_t j = 0; j < coordinates.size(); ++j) {
 
                         #ifndef NDEBUG
-                            assert(coordinates[j][0] < this->first);
-                            assert(coordinates[j][1] < this->second);
+                        assert(coordinates[j][0] < this->first);
+                        assert(coordinates[j][1] < this->second);
 
-                            if(std::abs(elements[j]) > TOLERANCE_PACS)
-                                this->elements[coordinates[j]] = elements[j];
-                        #else
+                        if(std::abs(elements[j]) > TOLERANCE_PACS)
                             this->elements[coordinates[j]] = elements[j];
+                        #else
+                        this->elements[coordinates[j]] = elements[j];
                         #endif
 
                     }
@@ -315,10 +315,10 @@ namespace pacs {
                         for(std::size_t k = start[1]; k < end[1]; ++k) {
 
                             #ifndef NDEBUG
-                                if(std::abs(elements[j]) > TOLERANCE_PACS)
-                                    this->elements[{j, k}] = elements[j * (end[1] - start[1]) + k];
-                            #else
+                            if(std::abs(elements[j]) > TOLERANCE_PACS)
                                 this->elements[{j, k}] = elements[j * (end[1] - start[1]) + k];
+                            #else
+                            this->elements[{j, k}] = elements[j * (end[1] - start[1]) + k];
                             #endif
 
                         }
@@ -397,15 +397,15 @@ namespace pacs {
                             auto [key, value] = (*it);
 
                             #ifndef NDEBUG
-                                if(std::abs(value) > TOLERANCE_PACS) {
-                                    this->outer.emplace_back(key[1]);
-                                    this->values.emplace_back(value);
-                                    ++index;
-                                }
-                            #else
+                            if(std::abs(value) > TOLERANCE_PACS) {
                                 this->outer.emplace_back(key[1]);
                                 this->values.emplace_back(value);
                                 ++index;
+                            }
+                            #else
+                            this->outer.emplace_back(key[1]);
+                            this->values.emplace_back(value);
+                            ++index;
                             #endif
 
                         }
@@ -432,10 +432,10 @@ namespace pacs {
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k) {
 
                             #ifndef NDEBUG
-                                if(std::abs(this->values[k]) > TOLERANCE_PACS)
-                                    this->elements[{j, this->outer[k]}] = this->values[k];
-                            #else
+                            if(std::abs(this->values[k]) > TOLERANCE_PACS)
                                 this->elements[{j, this->outer[k]}] = this->values[k];
+                            #else
+                            this->elements[{j, this->outer[k]}] = this->values[k];
                             #endif
 
                         }
@@ -478,10 +478,10 @@ namespace pacs {
                     } else {
                         
                         #ifdef PARALLEL_PACS // Actually faster.
-                            std::transform(std::execution::par, result.values.begin(), result.values.end(), result.values.begin(), product);
+                        std::transform(std::execution::par, result.values.begin(), result.values.end(), result.values.begin(), product);
                         #else
-                            for(auto &value: result.values)
-                                value *= scalar;
+                        for(auto &value: result.values)
+                            value *= scalar;
                         #endif
                     }
 
@@ -505,10 +505,10 @@ namespace pacs {
                     } else {
                         
                         #ifdef PARALLEL_PACS // Actually faster.
-                            std::transform(std::execution::par, this->values.begin(), this->values.end(), this->values.begin(), product);
+                        std::transform(std::execution::par, this->values.begin(), this->values.end(), this->values.begin(), product);
                         #else
-                            for(auto &value: this->values)
-                                value *= scalar;
+                        for(auto &value: this->values)
+                            value *= scalar;
                         #endif
 
                     }
@@ -535,10 +535,10 @@ namespace pacs {
                     } else {
                         
                         #ifdef PARALLEL_PACS // Actually faster.
-                            std::transform(std::execution::par, result.values.begin(), result.values.end(), result.values.begin(), division);
+                        std::transform(std::execution::par, result.values.begin(), result.values.end(), result.values.begin(), division);
                         #else
-                            for(auto &value: result.values)
-                                value /= scalar;
+                        for(auto &value: result.values)
+                            value /= scalar;
                         #endif
 
                     }
@@ -563,10 +563,10 @@ namespace pacs {
                     } else {
                         
                         #ifdef PARALLEL_PACS // Actually faster.
-                            std::transform(std::execution::par, this->values.begin(), this->values.end(), this->values.begin(), division);
+                        std::transform(std::execution::par, this->values.begin(), this->values.end(), this->values.begin(), division);
                         #else
-                            for(auto &value: this->values)
-                                value /= scalar;
+                        for(auto &value: this->values)
+                            value /= scalar;
                         #endif
 
                     }
@@ -984,9 +984,9 @@ namespace pacs {
                 template<Norm N>
                 double norm() const {
                     #ifdef PARALLEL_PACS
-                        auto absolute = [](const double &x) { return std::abs(x); };
-                        auto absolute_squared = [](const double &x) { return std::abs(x) * std::abs(x); };
-                        auto absolute_squared_map = [](auto &x) { return std::abs(x.second) * std::abs(x.second); };
+                    auto absolute = [](const double &x) { return std::abs(x); };
+                    auto absolute_squared = [](const double &x) { return std::abs(x) * std::abs(x); };
+                    auto absolute_squared_map = [](auto &x) { return std::abs(x.second) * std::abs(x.second); };
                     #endif
 
                     double norm = 0.0, max = 0.0;
@@ -1031,12 +1031,12 @@ namespace pacs {
                             for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
 
                                 #ifdef PARALLEL_PACS
-                                    double sum = std::transform_reduce(std::execution::par, this->values.begin() + this->inner[j], this->values.begin() + this->inner[j + 1], 0.0, std::plus{}, absolute);
+                                double sum = std::transform_reduce(std::execution::par, this->values.begin() + this->inner[j], this->values.begin() + this->inner[j + 1], 0.0, std::plus{}, absolute);
                                 #else
-                                    double sum = 0.0;
+                                double sum = 0.0;
 
-                                    for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
-                                        sum += this->values[k];
+                                for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                                    sum += this->values[k];
                                 #endif
 
                                 max = sum > max ? sum : max;
@@ -1053,23 +1053,23 @@ namespace pacs {
                         if(!(this->compressed)) {
 
                             #ifdef PARALLEL_PACS
-                                norm = std::sqrt(std::transform_reduce(std::execution::par, this->elements.begin(), this->elements.end(), 0.0, std::plus{}, absolute_squared_map));
+                            norm = std::sqrt(std::transform_reduce(std::execution::par, this->elements.begin(), this->elements.end(), 0.0, std::plus{}, absolute_squared_map));
                             #else
-                                for(const auto &[key, value]: this->elements)
-                                    norm += static_cast<double>(std::abs(value) * std::abs(value));
+                            for(const auto &[key, value]: this->elements)
+                                norm += static_cast<double>(std::abs(value) * std::abs(value));
 
-                                norm = std::sqrt(norm);
+                            norm = std::sqrt(norm);
                             #endif
 
                         } else {
 
                             #ifdef PARALLEL_PACS
-                                norm = std::sqrt(std::transform_reduce(std::execution::par, this->values.begin(), this->values.end(), 0.0, std::plus{}, absolute_squared));
+                            norm = std::sqrt(std::transform_reduce(std::execution::par, this->values.begin(), this->values.end(), 0.0, std::plus{}, absolute_squared));
                             #else
-                                for(const auto &value: this->values)
-                                    norm += static_cast<double>(std::abs(value) * std::abs(value));
+                            for(const auto &value: this->values)
+                                norm += static_cast<double>(std::abs(value) * std::abs(value));
 
-                                norm = std::sqrt(norm);
+                            norm = std::sqrt(norm);
                             #endif
 
                         }
