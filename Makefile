@@ -7,7 +7,7 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 # Parallel computing.
 # CXXFLAGS += -DPARALLEL_PACS
 # LDFLAGS += -L$(mkTbbLib)
-# LDLIBS += -ltbb
+# LDLIBS += -ltbb
 
 EXEC = main
 SOURCE = main.cpp
@@ -25,11 +25,11 @@ run: $(EXEC)
 	@echo "Done!"
 
 $(EXEC): $(OBJECT)
-	@echo "Linking $^ to $@"
+	@if ["$(LDLIBS)" = ""]; then echo "Linking $^ to $@"; else echo "Linking $^ to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(OBJECT): $(SOURCE) $(HEADERS)
-	@echo "Compiling $<"
+	@echo "Compiling $< with the following flags: $(CXXFLAGS)"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean.
