@@ -25,7 +25,7 @@ It introduces the following class:
 ``` cpp
 namespace algebra {
     template<MatrixType T, Order O>
-    class Matrix {...};
+    class Matrix {...};
 }
 ```
 
