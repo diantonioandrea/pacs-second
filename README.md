@@ -46,8 +46,8 @@ Reading and writing are facilitated through the following methods:
 ``` cpp
 T operator ()(const std::size_t &, const std::size_t &) const;
 void insert(const std::size_t &, const std::size_t &, const T &);
-void insert(const std::vector<std::array<std::size_t, 2> > &, const std::vector<T> &);
-void insert(const std::array<std::size_t, 2> &, const std::array<std::size_t, 2> &, const std::vector<T> &);
+void insert_vector(const std::vector<std::array<std::size_t, 2> > &, const std::vector<T> &);
+void insert_range(const std::array<std::size_t, 2> &, const std::array<std::size_t, 2> &, const std::vector<T> &);
 ```
 
 Writing's enabled only on uncompressed matrices.

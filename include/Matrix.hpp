@@ -275,7 +275,7 @@ namespace pacs {
                  * @param coordinates 
                  * @param elements 
                  */
-                void insert(const std::vector<std::array<std::size_t, 2> > &coordinates, const std::vector<T> &elements) {
+                void insert_vector(const std::vector<std::array<std::size_t, 2> > &coordinates, const std::vector<T> &elements) {
                     #ifndef NDEBUG // Out-of-bound and uncompression check.
                     assert(!(this->compressed));
                     assert(coordinates.size() == elements.size());
@@ -303,7 +303,7 @@ namespace pacs {
                  * @param end 
                  * @param elements 
                  */
-                void insert(const std::array<std::size_t, 2> &start, const std::array<std::size_t, 2> &end, const std::vector<T> &elements) {
+                void insert_range(const std::array<std::size_t, 2> &start, const std::array<std::size_t, 2> &end, const std::vector<T> &elements) {
                     #ifndef NDEBUG // Out-of-bound and uncompression check.
                     assert(!(this->compressed));
                     assert((start[0] < end[0]) && (end[0] < this->first));
