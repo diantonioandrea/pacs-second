@@ -90,7 +90,7 @@ Key components include:
     - `Market.hpp`: Definition for the market loader function.
     - `Tester.hpp`: Definitions for the tester functions.
 - `data/`:
-    - `matrix.mtx`: An example test Matrix.
+    - `matrix.mtx`: The example test Matrix.
 
 ## Setup
 
@@ -180,7 +180,7 @@ Even though it may seem that parallelizing the `Matrix<T, O> * std::vector<T>` p
 
 Hence, the following remains the faster approach I've opted for[^4]:
 
-[^4]: `Matrix<T, Row> * std::vector<T>`.
+[^4]: `Matrix<T, Row> * std::vector<T>` case.
 
 ``` cpp
 std::vector<T> result;
