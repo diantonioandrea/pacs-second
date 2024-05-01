@@ -31,7 +31,7 @@ namespace algebra {
 
 which is designed to handle sparse matrices within $\mathbb{R}^{n \times m}$.
 
-Sparse matrices can be instantiated with any type `T` that complies with the properties required by matrix spaces. Users can specify an ordering, either row-column or column-row, thanks to the following:
+Sparse matrices can be instantiated with any type `T` that complies with the properties required by matrix spaces, as imposed by the use of concepts. Users can specify an ordering, either row-column or column-row, thanks to the following:
 
 ``` cpp
 namespace algebra {
@@ -170,15 +170,17 @@ This approach accepts a custom lambda function each time and times it. However, 
 
 ### On the `insert` Method
 
-Instead of overloading the `T operator () const` for accessing elements and implementing a `T &operator ()` for editing elements, I chose to implement different `insert` methods. These methods accept either a pair of indexes `j, k`, a vector of coordinates, or a start and an end for a range of coordinates for the insertion and editing of elements.
+Instead of overloading the `T operator () const` for accessing elements and implementing a `T &operator ()`[^3] for editing elements, I chose to implement different `insert` methods. These methods accept either a pair of indexes `j, k`, a vector of coordinates, or a start and an end for a range of coordinates for the insertion and editing of elements.
+
+[^3]: The non-const call operator `T &operator()` has been intentionally omitted.
 
 ### On the Parallelization of the `Matrix<T, O> * std::vector<T>` Product
 
 Even though it may seem that parallelizing the `Matrix<T, O> * std::vector<T>` product would make it faster, due to the sparse structure of the matrices, it's actually slower than the approach used in the code.
 
-Hence, the following remains the faster approach I've opted for[^3]:
+Hence, the following remains the faster approach I've opted for[^4]:
 
-[^3]: `Matrix<T, Row> * std::vector<T>`.
+[^4]: `Matrix<T, Row> * std::vector<T>`.
 
 ``` cpp
 std::vector<T> result;
