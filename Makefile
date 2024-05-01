@@ -29,7 +29,7 @@ $(EXEC): $(OBJECT)
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(OBJECT): $(SOURCE) $(HEADERS)
-	@echo "Compiling $< with the following flags: $(CXXFLAGS)"
+	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean.
