@@ -22,6 +22,8 @@ namespace pacs {
 
     namespace algebra {
 
+        // Matrix' type concept.
+
         /**
          * @brief Addable types.
          * 
@@ -61,6 +63,21 @@ namespace pacs {
          */
         template<typename T>
         concept MatrixType = Addable<T> && Multipliable<T> && Absolute<T>;
+
+
+        // Ordering and Norm.
+
+        /**
+         * @brief Default orderings.
+         *
+         */
+        enum Order {Row, Column};
+
+        /**
+         * @brief Norms.
+         *
+         */
+        enum Norm {One, Infinity, Frobenius};
     }
 
 }

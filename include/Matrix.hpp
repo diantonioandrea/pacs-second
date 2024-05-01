@@ -40,18 +40,6 @@ namespace pacs {
     namespace algebra {
 
         /**
-         * @brief Default orderings.
-         *
-         */
-        enum Order {Row, Column};
-
-        /**
-         * @brief Norms.
-         *
-         */
-        enum Norm {One, Infinity, Frobenius};
-
-        /**
          * @brief Sparse matrix class.
          *
          * @tparam T Matrix' type.
