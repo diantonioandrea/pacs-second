@@ -220,7 +220,7 @@ namespace pacs {
                  */
                 T operator ()(const std::size_t &j, const std::size_t &k) const {
                     #ifndef NDEBUG // Out-of-bound check.
-                    assert((j < first) && (k < second));
+                    assert((j < this->first) && (k < this->second));
                     #endif
 
                     // Checks for the value inside elements, otherwise returns static_cast<T>(0).
