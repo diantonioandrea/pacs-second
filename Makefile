@@ -1,4 +1,4 @@
-.PHONY: all clean distclean
+.PHONY: compile run clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
 ifneq ($(PACS_ROOT),)
