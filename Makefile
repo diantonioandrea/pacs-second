@@ -5,9 +5,11 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 # CXXFLAGS += -DNDEBUG
 
 # Parallel computing.
+ifeq ($(mkPrefix),/u/sw)
 CXXFLAGS += -DPARALLEL_PACS
 LDFLAGS += -L$(mkTbbLib)
 LDLIBS += -ltbb
+endif
 
 EXEC = main
 SOURCE = main.cpp

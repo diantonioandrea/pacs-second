@@ -124,9 +124,11 @@ and parallel computing[^2] can be disabled by commenting the following lines:
 [^2]: Modules needed.
 
 ``` make
+ifeq ($(mkPrefix),/u/sw)
 CXXFLAGS += -DPARALLEL_PACS
 LDFLAGS += -L$(mkTbbLib)
 LDLIBS += -ltbb
+endif
 ```
 
 ## Notes to the Reader
