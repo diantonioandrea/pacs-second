@@ -25,7 +25,7 @@ run: $(EXEC)
 	@echo "Done!"
 
 $(EXEC): $(OBJECT)
-	@if ["$(LDLIBS)" = ""]; then echo "Linking $^ to $@"; else echo "Linking $^ to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
+	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $^ to $@"; else echo "Linking $^ to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(OBJECT): $(SOURCE) $(HEADERS)
