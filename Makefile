@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 # CXXFLAGS += -DNDEBUG
 
 # Parallel computing.
-ifeq ($(mkPrefix),/u/sw)
+ifneq ($(mkTbbLib),)
 CXXFLAGS += -DPARALLEL_PACS
 LDFLAGS += -L$(mkTbbLib)
 LDLIBS += -ltbb
@@ -22,7 +22,7 @@ compile: $(EXEC)
 	@echo "Done!"
 
 run: $(EXEC)
-	@echo "Running the script and redirecting the output to $(OUTPUT)"
+	@echo "Running ./$(EXEC) and redirecting the output to $(OUTPUT)"
 	@./$(EXEC) > $(OUTPUT)
 	@echo "Done!"
 

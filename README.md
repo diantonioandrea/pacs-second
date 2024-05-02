@@ -119,12 +119,10 @@ Furthermore, the executable could potentially be accelerated by removing the com
 # CXXFLAGS += -DNDEBUG
 ```
 
-and parallel computing[^2] can be disabled by commenting the following lines:
-
-[^2]: Modules needed.
+and parallel computing can be disabled by commenting out the following lines:
 
 ``` make
-ifeq ($(mkPrefix),/u/sw)
+ifneq ($(mkTbbLib),)
 CXXFLAGS += -DPARALLEL_PACS
 LDFLAGS += -L$(mkTbbLib)
 LDLIBS += -ltbb
@@ -169,17 +167,17 @@ This approach accepts a custom lambda function each time and times it. However, 
 
 ### On the `insert` Method
 
-Instead of overloading the `T operator () const` for accessing elements and implementing a `T &operator ()`[^3] for editing elements, I chose to implement different `insert` methods. These methods accept either a pair of indexes `j, k`, a vector of coordinates, or a start and an end for a range of coordinates for the insertion and editing of elements.
+Instead of overloading the `T operator () const` for accessing elements and implementing a `T &operator ()`[^2] for editing elements, I chose to implement different `insert` methods. These methods accept either a pair of indexes `j, k`, a vector of coordinates, or a start and an end for a range of coordinates for the insertion and editing of elements.
 
-[^3]: The non-const call operator `T &operator()` has been intentionally omitted.
+[^2]: The non-const call operator `T &operator()` has been intentionally omitted.
 
 ### On the Parallelization of the `Matrix<T, O> * std::vector<T>` Product
 
 Even though it may seem that parallelizing the `Matrix<T, O> * std::vector<T>` product would make it faster, due to the sparse structure of the matrices, it's actually slower than the approach used in the code.
 
-Hence, the following remains the faster approach I've opted for[^4]:
+Hence, the following remains the faster approach I've opted for[^3]:
 
-[^4]: `Matrix<T, Row> * std::vector<T>` case.
+[^3]: `Matrix<T, Row> * std::vector<T>` case.
 
 ``` cpp
 std::vector<T> result;
