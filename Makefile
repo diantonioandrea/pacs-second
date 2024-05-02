@@ -1,6 +1,11 @@
 .PHONY: all clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
+ifneq ($(PACS_ROOT),)
+LDFLAGS += -L$(PACS_ROOT)/lib
+LDLIBS += -lpacs
+endif
+
 # Further optimization.
 # CXXFLAGS += -DNDEBUG
 
