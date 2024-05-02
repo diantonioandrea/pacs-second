@@ -102,15 +102,12 @@ To begin, clone the repository from [here](https://github.com/diantonioandrea/pa
 
 ### Compilation and Execution
 
-Compile the code:
+Compile and execute the code:
 
     make
-
-Execute the code:
-
     ./main
 
-:warning: It is advised to redirect the output to a file due to its length by executing the code with:
+:warning: It is advised to redirect the output to a file due to its length by compiling and executing the code with:
 
     make run
 
