@@ -1,7 +1,7 @@
 .PHONY: all clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
-# Optimizations.
+# Further optimization.
 # CXXFLAGS += -DNDEBUG
 
 # Parallel computing.
@@ -18,9 +18,12 @@ HEADERS = ./include/* # Recompiling purposes.
 OUTPUT = ./output.txt
 
 # Rules.
+
+# Compiling only.
 compile: $(EXEC)
 	@echo "Done!"
 
+# Compiling and running.
 run: $(EXEC)
 	@echo "Running ./$(EXEC) and redirecting the output to $(OUTPUT)"
 	@./$(EXEC) > $(OUTPUT)
