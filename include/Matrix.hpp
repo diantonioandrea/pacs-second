@@ -1130,20 +1130,15 @@ namespace pacs {
                         }
 
                     } else {
-                        ost << "Inner: ";
+                        for(std::size_t j = 0; j < matrix.first; ++j) {
+                            for(std::size_t k = matrix.inner[j]; k < matrix.inner[j + 1]; ++k) {
+                                ost << "(" << j << ", " << matrix.outer[k] << "): " << matrix.values[k];
 
-                        for(const auto &value: matrix.inner)
-                            ost << value << " ";
+                                if(k < matrix.inner[matrix.first] - 1)
+                                    ost << std::endl;
+                            }
 
-                        ost << std::endl << "Outer: ";
-
-                        for(const auto &value: matrix.outer)
-                            ost << value << " ";
-
-                        ost << std::endl <<  "Values: ";
-
-                        for(const auto &value: matrix.values)
-                            ost << value << " ";
+                        }
                     }
 
                     return ost;
