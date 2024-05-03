@@ -212,7 +212,7 @@ namespace pacs {
                 // CALL OPERATORS.
 
                 /**
-                 * @brief Const call operator, returns the (i, j)-th element if present.
+                 * @brief Const call operator, returns the (j, k)-th element if present.
                  *
                  * @param j
                  * @param k
